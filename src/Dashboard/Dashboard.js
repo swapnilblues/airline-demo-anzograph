@@ -630,8 +630,8 @@ class Dashboard extends React.Component {
             return (
                 <div>
 
-                    <div className={"container-fluid"}>
-                        <div className="row">
+                    <div className={"container-fluid bg-light"}>
+                        <div className="row align-items-start">
                             <div className="col-sm-3 bg-dark">
 
 
