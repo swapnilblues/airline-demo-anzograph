@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+IntelliJ files
+/.idea
+anzograph-client.iml
+
 # testing
 /coverage
 
