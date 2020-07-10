@@ -20,6 +20,7 @@ class LineChart extends React.Component {
                         }
 
                         options={{
+                            backgroundColor: "#6c757d",
                             title: this.props.title,
                             chart: {
                                 title: this.props.title

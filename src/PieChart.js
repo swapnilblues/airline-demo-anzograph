@@ -19,6 +19,7 @@ return (
                     this.props.gChart
                 }
                 options={{
+                    backgroundColor: "#6c757d",
                     title: this.props.title,
                     // Just add this option
                     is3D: true,

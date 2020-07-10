@@ -20,6 +20,7 @@ return (
                 }
 
                 options={{
+                    backgroundColor: "#6c757d",
                     title: this.props.title,
                     hAxis: {
                         minValue: 0,
