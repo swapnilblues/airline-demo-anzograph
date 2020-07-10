@@ -11,6 +11,13 @@ import ReactTableComponent from "../ReactTableComponent";
 class Dashboard extends React.Component {
 
 
+    componentDidMount() {
+        this.runQueryForDiffDelays()
+        this.runQueryForWeatherDelay()
+        this.runQueryForAvgAirlineDelay()
+        this.runQueryForCancellation()
+    }
+
     componentDidUpdate= async (prevProps, prevState, snapshot) => {
         if(prevState.end !== this.state.end || prevState.start !== this.state.start) {
             if(parseInt(this.state.end) < parseInt(this.state.start)) {
@@ -27,13 +34,19 @@ class Dashboard extends React.Component {
         destination : 'All',
         start : 1,
         end : 12,
-        gChart: '',
+        gChart1  : '',
+        gChart2  : '',
+        gChart3  : '',
+        gChart4  : '',
         showBar: false,
         showPie: false,
         showArea: false,
         showVerBar: false,
         result: {status: '', value: {heads: {vars: []}, results: {bindings: []}}, h: [], v: [], err: '', xmlOutput: ''},
-        titleOfGraph: ''
+        titleOfGraph1: '',
+        titleOfGraph2: '',
+        titleOfGraph3: '',
+        titleOfGraph4: ''
     }
 
     month = {
@@ -393,7 +406,7 @@ class Dashboard extends React.Component {
                 showBar: true,
                 showPie: true,
                 showArea: true,
-                titleOfGraph: `Flight delays from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+                titleOfGraph1: `Flight delays from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
                 gChart: ''
             })
             const formData = await this.createDataForDiffDelays()
@@ -421,7 +434,7 @@ class Dashboard extends React.Component {
                             let d1 = await this.createGChartForDiffDelays(c.head.vars,c.results.bindings)
                             // console.log("d1",d1)
                             await this.setState({
-                                gChart : d1
+                                gChart1 : d1
                             })
 
                             // console.log("gChart after setState",this.state.gChart)
@@ -441,7 +454,7 @@ class Dashboard extends React.Component {
             showBar: true,
             showPie: false,
             showArea: true,
-            titleOfGraph: `Weather vs Non-weather delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+            titleOfGraph2: `Weather vs Non-weather delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
             gChart: ''
         })
         const formData = await this.createDataForWeatherDelay()
@@ -469,7 +482,7 @@ class Dashboard extends React.Component {
                     let d1 = await this.createGChartForWeatherDelay(c.head.vars,c.results.bindings)
                     // console.log("d1",d1)
                     await this.setState({
-                        gChart : d1
+                        gChart2 : d1
                     })
 
                     // console.log("gChart after setState",this.state.gChart)
@@ -529,7 +542,7 @@ class Dashboard extends React.Component {
             showBar: true,
             showPie: true,
             showArea: true,
-            titleOfGraph: `Average flight delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+            titleOfGraph3: `Average flight delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
             gChart: ''
         })
         const formData = await this.createDataForAirlineDelay()
@@ -557,7 +570,7 @@ class Dashboard extends React.Component {
                     let d1 = await this.createGChartForFlightDelay(c.head.vars,c.results.bindings)
                     // console.log("d1",d1)
                     await this.setState({
-                        gChart : d1
+                        gChart3 : d1
                     })
 
                     // console.log("gChart after setState",this.state.gChart)
@@ -576,7 +589,7 @@ class Dashboard extends React.Component {
             showBar: true,
             showPie: true,
             showArea: true,
-            titleOfGraph: `Flight Cancellation Reason:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+            titleOfGraph4: `Flight Cancellation Reason:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
             gChart: ''
         })
         const formData = await this.createDataForCancellation()
@@ -604,7 +617,7 @@ class Dashboard extends React.Component {
                     let d1 = await this.createGChartForCancellation(c.head.vars,c.results.bindings)
                     // console.log("d1",d1)
                     await this.setState({
-                        gChart : d1
+                        gChart4 : d1
                     })
 
                     // console.log("gChart after setState",this.state.gChart)
@@ -721,15 +734,15 @@ class Dashboard extends React.Component {
 
                                     <div className="wbdv-module-item">
                                         <div className="d-flex justify-content-center">
-                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>} onClick={this.runQueryForDistance}>
-                                                Get Distance
-                                            </Button>
-                                        </div>
-                                    </div>
-
-                                    <div className="wbdv-module-item">
-                                        <div className="d-flex justify-content-center">
-                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>} onClick={this.runQueryForDiffDelays}>
+                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
+                                                    onClick = {  () => {
+                                                         this.runQueryForDiffDelays()
+                                                         this.runQueryForWeatherDelay()
+                                                         this.runQueryForAvgAirlineDelay()
+                                                         this.runQueryForCancellation()
+                                                    }
+                                                    }
+                                            >
                                                 Run All Queries
                                             </Button>
                                         </div>
@@ -779,16 +792,17 @@ class Dashboard extends React.Component {
                                         {
                                         <td>
                                             <BarChart
-                                                    gChart={this.state.gChart}
-                                                    title = {this.state.titleOfGraph}
+                                                gChart={this.state.gChart3}
+                                                title={this.state.titleOfGraph3}
                                             />
+
                                         </td>
                                         }
                                         {
                                         <td>
                                             <PieChart
-                                                gChart={this.state.gChart}
-                                                title = {this.state.titleOfGraph}
+                                                gChart={this.state.gChart1}
+                                                title = {this.state.titleOfGraph1}
                                             />
                                         </td>
                                         }
@@ -797,8 +811,8 @@ class Dashboard extends React.Component {
                                         {
                                         <td>
                                             <LineChart
-                                                gChart={this.state.gChart}
-                                                title={this.state.titleOfGraph}
+                                                gChart={this.state.gChart2}
+                                                title = {this.state.titleOfGraph2}
                                             />
                                             {/*<ReactTableComponent*/}
                                             {/*    gChart={this.state.gChart}*/}
@@ -806,7 +820,10 @@ class Dashboard extends React.Component {
                                         </td>
                                         }
                                         <td>
-                                            Graph4
+                                            <PieChart
+                                                gChart={this.state.gChart4}
+                                                title = {this.state.titleOfGraph4}
+                                            />
                                         </td>
                                     </tr>
                                 </table>

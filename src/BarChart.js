@@ -13,17 +13,14 @@ return (
             <Chart
                 width={'720px'}
                 height={'500px'}
-                chartType="Bar"
+                chartType="BarChart"
                 loader={<div>Loading Chart</div>}
                 data={
                     this.props.gChart
                 }
 
                 options={{
-                    chart: {
-                        title: this.props.title
-                    },
-                    chartArea: { width: '10%' },
+                    title: this.props.title,
                     hAxis: {
                         minValue: 0,
                     }
