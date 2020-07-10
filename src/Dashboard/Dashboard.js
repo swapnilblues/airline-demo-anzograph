@@ -29,7 +29,6 @@ class Dashboard extends React.Component {
     }
 
     state = {
-        flightNo : '',
         origin : 'All',
         destination : 'All',
         start : 1,
@@ -406,7 +405,7 @@ class Dashboard extends React.Component {
                 showBar: true,
                 showPie: true,
                 showArea: true,
-                titleOfGraph1: `Flight delays from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+                titleOfGraph1: `Flight delay reasons from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
                 gChart: ''
             })
             const formData = await this.createDataForDiffDelays()
@@ -637,9 +636,7 @@ class Dashboard extends React.Component {
 
 
                                 <ul className="list-group wbdv-module-list">
-                                    <span className="list-group-item bg-info wbdv-module-item">
-                                        <span className="wbdv-module-item-title">Default list item</span>
-                                    </span>
+
                                     <span className="list-group-item bg-info wbdv-module-item">
                                         <span className="wbdv-module-item-title text-dark">Origin</span>
                                         <input type="text" className="input-flight"
@@ -719,19 +716,6 @@ class Dashboard extends React.Component {
                                         </select>
                                     </span>
 
-                                    <span className="list-group-item bg-info wbdv-module-item">
-                                        <span className="wbdv-module-item-title text-dark">Flight number</span>
-                                        <input type="text" id="flight-number" className="input-flight"
-                                               onChange={async (e) =>
-                                                   await this.setState({
-                                                       flightNo: e.target.value
-                                                   })
-                                               }
-
-                                               value={this.state.flightNo}
-                                        />
-                                    </span>
-
                                     <div className="wbdv-module-item">
                                         <div className="d-flex justify-content-center">
                                             <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
@@ -747,40 +731,6 @@ class Dashboard extends React.Component {
                                             </Button>
                                         </div>
                                     </div>
-
-                                    <div className="wbdv-module-item">
-                                        <div className="d-flex justify-content-center">
-                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>} onClick={this.runQueryForDiffDelays}>
-                                                Get Types of Delay
-                                            </Button>
-                                        </div>
-                                    </div>
-
-                                    <div className="wbdv-module-item">
-                                        <div className="d-flex justify-content-center">
-                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>} onClick={this.runQueryForWeatherDelay}>
-                                                Get Weather vs Non-weather Delay
-                                            </Button>
-                                        </div>
-                                    </div>
-
-                                    <div className="wbdv-module-item">
-                                        <div className="d-flex justify-content-center">
-                                            <Button variant="contained" size="large" align="center" endIcon={<Icon>send</Icon>} onClick={this.runQueryForAvgAirlineDelay}>
-                                                Get Average Airline Delay
-                                            </Button>
-                                        </div>
-                                    </div>
-
-                                    <div className="wbdv-module-item">
-                                        <div className="d-flex justify-content-center">
-                                            <Button variant="contained" size="large" align="center" endIcon={<Icon>send</Icon>} onClick={this.runQueryForCancellation}>
-                                                Get Cancellation Reason
-                                            </Button>
-                                        </div>
-                                    </div>
-
-
 
                                 </ul>
 
@@ -814,9 +764,6 @@ class Dashboard extends React.Component {
                                                 gChart={this.state.gChart2}
                                                 title = {this.state.titleOfGraph2}
                                             />
-                                            {/*<ReactTableComponent*/}
-                                            {/*    gChart={this.state.gChart}*/}
-                                            {/*/>*/}
                                         </td>
                                         }
                                         <td>
@@ -828,34 +775,6 @@ class Dashboard extends React.Component {
                                     </tr>
                                 </table>
 
-                                {/*<div className="row">*/}
-                                {/*    {  this.state.showBar === true &&*/}
-                                {/*        <div className="col-sm-6">*/}
-                                {/*            <BarChart*/}
-                                {/*                gChart={this.state.gChart}*/}
-                                {/*                title = {this.state.titleOfGraph}*/}
-                                {/*            />*/}
-                                {/*            /!*Graph1*!/*/}
-                                {/*        </div>*/}
-                                {/*    }*/}
-                                {/*    {this.state.showPie === true &&*/}
-                                {/*        <div className="col-sm-4">*/}
-                                {/*            <PieChart*/}
-                                {/*                gChart={this.state.gChart}*/}
-                                {/*                title = {this.state.titleOfGraph}*/}
-                                {/*            />*/}
-                                {/*        /!*Graph2*!/*/}
-                                {/*        </div>*/}
-                                {/*    }*/}
-                                {/*</div>*/}
-                                {/*<div className="row">*/}
-                                {/*    <div className="col-sm">*/}
-                                {/*        Graph3*/}
-                                {/*    </div>*/}
-                                {/*    <div className="col-sm">*/}
-                                {/*        Graph4*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
                             </div>
                         </div>
 
