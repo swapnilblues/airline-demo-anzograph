@@ -5,10 +5,6 @@ import ShowOutput from "./ShowOutput";
 import XMLParser from 'react-xml-parser';
 
 
-
-
-
-
 class LandingComponent extends React.Component {
 
 state = {

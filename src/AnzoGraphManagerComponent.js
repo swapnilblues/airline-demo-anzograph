@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import LandingComponent from "./LandingComponent";
 import GoogleChartDemo from "./GoogleChartDemo";
 import Dashboard from "./Dashboard/Dashboard";
+import {WebMapView} from "./mapVIewer";
 
 
 
@@ -32,6 +33,12 @@ class AnzoGraphManagerComponent extends React.Component {
                         path="/dashboard"
                         exact={true}
                         component={Dashboard}
+                    >
+                    </Route>
+                    <Route
+                        path="/maps"
+                        exact={true}
+                        component={WebMapView}
                     >
                     </Route>
                 </Router>
