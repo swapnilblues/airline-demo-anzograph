@@ -7,7 +7,18 @@ export class WebMapView extends React.Component {
         this.mapRef = React.createRef();
     }
 
-    componentDidMount() {
+    state = {
+        a : 1,
+        point1 : {
+            type: "point",
+            longitude: -71.0589,
+            latitude: 42.3601
+        },
+        longitude: -122.431297,
+        latitude: 37.7749
+    }
+
+    load = () => {
         // lazy load the required ArcGIS API for JavaScript modules and CSS
         loadModules(['esri/Map', 'esri/views/MapView','esri/Graphic',
             'esri/layers/GraphicsLayer'], { css: true })
@@ -24,15 +35,12 @@ export class WebMapView extends React.Component {
 
                 let point = {
                     type: "point",
-                    longitude: -122.431297,
-                    latitude: 37.7749
-                };
+                    longitude: this.state.longitude,
+                    latitude: this.state.latitude
+                }
 
-                let point1 = {
-                    type: "point",
-                    longitude: -71.0589,
-                    latitude: 42.3601
-                };
+
+                let point1 = this.state.point1
 
                 let simpleMarkerSymbol = {
                     type: "simple-marker",//row.get('policyID'),
@@ -63,18 +71,34 @@ export class WebMapView extends React.Component {
                     zoom: 5
                 });
             });
-    }
-
-    componentWillUnmount() {
-        if (this.view) {
-            // destroy the map view
-            this.view.container = null;
-        }
+}
+    componentDidMount() {
+        this.load()
     }
 
     render() {
         return (
             <div>
+
+                <input type="text"
+                       onChange={async (e) =>
+                           await this.setState({
+                               longitude: e.target.value
+                           })
+                       }
+
+                       value={this.state.longitude}
+                />
+                <input type="text"
+                       onChange={async (e) =>
+                           await this.setState({
+                               latitude: e.target.value
+                           })
+                       }
+
+                       value={this.state.latitude}
+                />
+                <button onClick={this.load}>Change</button>
                 <div className="webmap" ref={this.mapRef} />
             </div>
 
