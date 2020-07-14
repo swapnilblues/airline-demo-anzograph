@@ -727,7 +727,7 @@ class Dashboard extends React.Component {
                                                     }
                                                     }
                                             >
-                                                Run All Queries
+                                                Submit
                                             </Button>
                                         </div>
                                     </div>
