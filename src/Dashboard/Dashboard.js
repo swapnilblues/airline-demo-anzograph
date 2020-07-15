@@ -30,6 +30,18 @@ class Dashboard extends React.Component {
         }
     }
 
+    changeOrigin = (selectedItem) => {
+        this.setState({
+            origin: selectedItem.value
+        });
+    }
+
+    changeDestination = (selectedItem) => {
+        this.setState({
+            destination: selectedItem.value
+        });
+    }
+
     state = {
         origin : 'All',
         destination : 'All',
@@ -48,7 +60,7 @@ class Dashboard extends React.Component {
         titleOfGraph2: '',
         titleOfGraph3: '',
         titleOfGraph4: '',
-        airports: []
+        airports: [{value:'All', label:'All'}]
     }
 
     month = {
@@ -689,30 +701,43 @@ class Dashboard extends React.Component {
                                 <ul className="list-group wbdv-module-list">
 
                                     <span className="list-group-item bg-info wbdv-module-item">
-                                        <Select options={this.state.airports} />
-                                        <span className="wbdv-module-item-title text-dark">Origin</span>
-                                        <input type="text" className="input-flight"
-                                               onChange={async (e) =>
-                                                   await this.setState({
-                                                       origin: e.target.value
-                                                   })
-                                               }
 
-                                               value={this.state.origin}
+                                        <span className="wbdv-module-item-title text-dark">Origin</span>
+
+                                        <Select
+                                            defaultValue={this.state.airports[0]}
+                                            options={this.state.airports}
+                                            onChange={this.changeOrigin}
                                         />
+
+                                        {/*<input type="text" className="input-flight"*/}
+                                        {/*       onChange={async (e) =>*/}
+                                        {/*           await this.setState({*/}
+                                        {/*               origin: e.target.value*/}
+                                        {/*           })*/}
+                                        {/*       }*/}
+
+                                        {/*       value={this.state.origin}*/}
+                                        {/*/>*/}
                                     </span>
 
                                     <span className="list-group-item bg-info wbdv-module-item">
                                         <span className="wbdv-module-item-title text-dark">Destination</span>
-                                        <input type="text" className="input-flight"
-                                               onChange={async (e) =>
-                                                   await this.setState({
-                                                       destination: e.target.value
-                                                   })
-                                               }
 
-                                               value={this.state.destination}
+                                        <Select
+                                            defaultValue={this.state.airports[0]}
+                                            options={this.state.airports}
+                                            onChange={this.changeDestination}
                                         />
+                                        {/*<input type="text" className="input-flight"*/}
+                                        {/*       onChange={async (e) =>*/}
+                                        {/*           await this.setState({*/}
+                                        {/*               destination: e.target.value*/}
+                                        {/*           })*/}
+                                        {/*       }*/}
+
+                                        {/*       value={this.state.destination}*/}
+                                        {/*/>*/}
                                     </span>
 
                                     <span className="list-group-item bg-info wbdv-module-item">
