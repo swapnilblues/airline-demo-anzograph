@@ -98,6 +98,8 @@ export class WebMapView extends React.Component {
 
                        value={this.state.latitude}
                 />
+                -73.935242
+                40.730610
                 <button onClick={this.load}>Change</button>
                 <div className="webmap" ref={this.mapRef} />
             </div>
