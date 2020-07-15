@@ -6,12 +6,14 @@ import { Button } from '@material-ui/core';
 import Icon from "@material-ui/core/Icon";
 import LineChart from "../LineChart";
 import ReactTableComponent from "../ReactTableComponent";
+import Select from 'react-select'
 
 
 class Dashboard extends React.Component {
 
 
     componentDidMount() {
+        this.loadAirports()
         this.runQueryForDiffDelays()
         this.runQueryForWeatherDelay()
         this.runQueryForAvgAirlineDelay()
@@ -45,7 +47,8 @@ class Dashboard extends React.Component {
         titleOfGraph1: '',
         titleOfGraph2: '',
         titleOfGraph3: '',
-        titleOfGraph4: ''
+        titleOfGraph4: '',
+        airports: []
     }
 
     month = {
@@ -61,6 +64,54 @@ class Dashboard extends React.Component {
         10 : 'Oct, 2015',
         11 : 'Nov, 2015',
         12 : 'Dec, 2015',
+    }
+
+    loadAirports = async () => {
+        const f1 = new URLSearchParams()
+        let query = 'prefix : <https://ontologies.semanticarts.com/raw_data#>\n' +
+            'prefix fl: <https://ontologies.semanticarts.com/flights/>\n' +
+            'prefix owl: <http://www.w3.org/2002/07/owl#>\n' +
+            'prefix skos:    <http://www.w3.org/2004/02/skos/core#>\n' +
+            'select distinct ?airport_code\n' +
+            'from <airline_flight_network>\n' +
+            'where {\n' +
+            '  [ a fl:Airport ;\n' +
+            '    fl:terminalCode ?airport_code ;\n' +
+            '    fl:locatedIn [\n' +
+            '      a fl:City;\n' +
+            '      skos:prefLabel ?airport_city;\n' +
+            '      fl:locatedIn [ a fl:Country; skos:prefLabel ?airport_country ]\n' +
+            '    ]\n' +
+            '  ]\n' +
+            '  filter(?airport_country = "United States")\n' +
+            '  filter(strlen(?airport_code) = 3)\n' +
+            '}'
+        await f1.append('query', query)
+        await f1.append('output', 'json')
+        await fetch(`http://localhost:7070/sparql`, {
+                method: "POST",
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                body: f1
+            }
+        )
+            .then(async (response) => {
+                if (response.status === 200) {
+                    let c = await response.json()
+                    console.log("AA",c)
+                    let datas = c.results.bindings
+                    for(let i=0; i<datas.length;i++) {
+                        let curr = datas[i].airport_code.value
+                        await this.setState({
+                            airports: [...this.state.airports, {
+                                value: curr,
+                                label: curr
+                            }],
+                        })
+                    }
+                }
+            })
     }
 
     createDataForDistance = () => {
@@ -638,6 +689,7 @@ class Dashboard extends React.Component {
                                 <ul className="list-group wbdv-module-list">
 
                                     <span className="list-group-item bg-info wbdv-module-item">
+                                        <Select options={this.state.airports} />
                                         <span className="wbdv-module-item-title text-dark">Origin</span>
                                         <input type="text" className="input-flight"
                                                onChange={async (e) =>
