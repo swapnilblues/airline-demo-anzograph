@@ -1,5 +1,6 @@
 import React from 'react';
 import { loadModules } from 'esri-loader';
+import { WebMap, WebScene } from '@esri/react-arcgis';
 
 export class WebMapView extends React.Component {
     constructor(props) {
@@ -64,6 +65,28 @@ export class WebMapView extends React.Component {
                 graphicsLayer.add(pointGraphic);
                 graphicsLayer.add(pointGraphic1);
 
+                let simpleLineSymbol = {
+                    type: "simple-line",
+                    color: [0, 0, 0], // black
+                    width: 2
+                };
+
+                let polyline = {
+                    type: "polyline",
+                    paths: [
+                        [-122.431297, 37.7749],
+                        [-87.623177,41.881832],
+                        [-71.0589, 42.3601]
+                    ]
+                };
+
+                let polylineGraphic = new Graphic({
+                    geometry: polyline,
+                    symbol: simpleLineSymbol
+                });
+
+                graphicsLayer.add(polylineGraphic);
+
                 this.view = new MapView({
                     container: this.mapRef.current,
                     map: map,
@@ -79,6 +102,9 @@ export class WebMapView extends React.Component {
     render() {
         return (
             <div>
+                {/*<div style={{ width: '100vw', height: '100vh' }}>*/}
+                {/*    <WebMap id="6627e1dd5f594160ac60f9dfc411673f" />*/}
+                {/*</div>*/}
 
                 <input type="text"
                        onChange={async (e) =>
