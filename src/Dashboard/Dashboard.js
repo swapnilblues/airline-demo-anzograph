@@ -80,24 +80,31 @@ class Dashboard extends React.Component {
 
     loadAirports = async () => {
         const f1 = new URLSearchParams()
-        let query = 'prefix : <https://ontologies.semanticarts.com/raw_data#>\n' +
-            'prefix fl: <https://ontologies.semanticarts.com/flights/>\n' +
-            'prefix owl: <http://www.w3.org/2002/07/owl#>\n' +
-            'prefix skos:    <http://www.w3.org/2004/02/skos/core#>\n' +
-            'select distinct ?airport_code\n' +
-            'from <airline_flight_network>\n' +
-            'where {\n' +
-            '  [ a fl:Airport ;\n' +
-            '    fl:terminalCode ?airport_code ;\n' +
-            '    fl:locatedIn [\n' +
-            '      a fl:City;\n' +
-            '      skos:prefLabel ?airport_city;\n' +
-            '      fl:locatedIn [ a fl:Country; skos:prefLabel ?airport_country ]\n' +
-            '    ]\n' +
+        let query = 'PREFIX : <https://ontologies.semanticarts.com/raw_data#> \n' +
+            'PREFIX fl: <https://ontologies.semanticarts.com/flights/> \n' +
+            'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
+            'PREFIX skos:  <http://www.w3.org/2004/02/skos/core#>\n' +
+            'SELECT DISTINCT\n' +
+            ' ?airport_code ?airport_city ?lat ?lng # ?airport_country\n' +
+            'FROM <airline_flight_network>\n' +
+            'WHERE {\n' +
+            ' [ a fl:Airport ;\n' +
+            '  fl:terminalCode ?airport_code ;\n' +
+            '  :lat ?lat ;\n' +
+            '  :long ?lng ;\t\n' +
+            '  fl:locatedIn [ a fl:City;\n' +
+            '   skos:prefLabel ?airport_city;\n' +
+            '   fl:locatedIn [ a fl:Country;\n' +
+            '    skos:prefLabel ?airport_country\n' +
+            '   ]\n' +
             '  ]\n' +
-            '  filter(?airport_country = "United States")\n' +
-            '  filter(strlen(?airport_code) = 3)\n' +
-            '}'
+            ' ]\n' +
+            ' filter(?airport_country = "United States")\n' +
+            ' filter(strlen(?airport_code) = 3)\n' +
+            '}\n' +
+            'ORDER BY\n' +
+            ' ?airport_city\n' +
+            ' ?airport_code\n'
         await f1.append('query', query)
         await f1.append('output', 'json')
         await fetch(`http://localhost:7070/sparql`, {
@@ -111,14 +118,14 @@ class Dashboard extends React.Component {
             .then(async (response) => {
                 if (response.status === 200) {
                     let c = await response.json()
-                    console.log("AA",c)
+                    console.log("AANew",c)
                     let datas = c.results.bindings
                     for(let i=0; i<datas.length;i++) {
                         let curr = datas[i].airport_code.value
                         await this.setState({
                             airports: [...this.state.airports, {
                                 value: curr,
-                                label: curr
+                                label: curr + " - " + datas[i].airport_city.value
                             }],
                         })
                     }
