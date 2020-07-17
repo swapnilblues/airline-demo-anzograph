@@ -75,6 +75,7 @@ export class WebMapView extends React.Component {
                     type: "polyline",
                     paths: [
                         [-122.431297, 37.7749],
+                        [-93.258133,44.986656],
                         [-87.623177,41.881832],
                         [-71.0589, 42.3601]
                     ]
