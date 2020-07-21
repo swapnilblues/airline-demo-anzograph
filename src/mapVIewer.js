@@ -21,8 +21,8 @@ export class WebMapView extends React.Component {
     load = () => {
         // lazy load the required ArcGIS API for JavaScript modules and CSS
         loadModules(['esri/Map', 'esri/views/MapView','esri/Graphic',
-            'esri/layers/GraphicsLayer','esri/geometry/Polyline','esri/geometry/support/geodesicUtils','esri/geometry/geometryEngine'], { css: true })
-            .then(([ArcGISMap, MapView,Graphic, GraphicsLayer, Polyline, GeoDesicUtils, geometryEngine]) => {
+            'esri/layers/GraphicsLayer','esri/geometry/Polyline','esri/geometry/geometryEngine'], { css: true })
+            .then(([ArcGISMap, MapView,Graphic, GraphicsLayer, Polyline, geometryEngine]) => {
                 const map = new ArcGISMap({
                     basemap: 'topo-vector'
                 });
@@ -53,15 +53,16 @@ export class WebMapView extends React.Component {
 
                 //newline
                 let polyline = new Polyline({
-                    paths: [[
-                        [-122.431297, 37.7749],
+                    paths: [
+                        // [-122.431297, 37.7749],
+                        [this.state.longitude,this.state.latitude],
                         // [-93.258133,44.986656],
                         // [-87.623177,41.881832],
                         [-71.0589, 42.3601]
-                    ]]
+                    ]
                 })
 
-                polyline = GeoDesicUtils.geodesicDensify(polyline,10000);
+                polyline = geometryEngine.geodesicDensify(polyline,10000);
 
                 let pointGraphic = new Graphic({
                     geometry: point,
