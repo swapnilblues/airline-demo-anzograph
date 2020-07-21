@@ -1,6 +1,5 @@
 import React from 'react';
 import { loadModules } from 'esri-loader';
-import { WebMap, WebScene } from '@esri/react-arcgis';
 
 export class WebMapView extends React.Component {
     constructor(props) {
@@ -22,8 +21,8 @@ export class WebMapView extends React.Component {
     load = () => {
         // lazy load the required ArcGIS API for JavaScript modules and CSS
         loadModules(['esri/Map', 'esri/views/MapView','esri/Graphic',
-            'esri/layers/GraphicsLayer'], { css: true })
-            .then(([ArcGISMap, MapView,Graphic, GraphicsLayer]) => {
+            'esri/layers/GraphicsLayer','esri/geometry/Polyline','esri/geometry/support/geodesicUtils','esri/geometry/geometryEngine'], { css: true })
+            .then(([ArcGISMap, MapView,Graphic, GraphicsLayer, Polyline, GeoDesicUtils, geometryEngine]) => {
                 const map = new ArcGISMap({
                     basemap: 'topo-vector'
                 });
@@ -52,6 +51,18 @@ export class WebMapView extends React.Component {
                     }
                 };
 
+                //newline
+                let polyline = new Polyline({
+                    paths: [[
+                        [-122.431297, 37.7749],
+                        // [-93.258133,44.986656],
+                        // [-87.623177,41.881832],
+                        [-71.0589, 42.3601]
+                    ]]
+                })
+
+                polyline = GeoDesicUtils.geodesicDensify(polyline,10000);
+
                 let pointGraphic = new Graphic({
                     geometry: point,
                     symbol: simpleMarkerSymbol
@@ -71,15 +82,16 @@ export class WebMapView extends React.Component {
                     width: 2
                 };
 
-                let polyline = {
-                    type: "polyline",
-                    paths: [
-                        [-122.431297, 37.7749],
-                        [-93.258133,44.986656],
-                        [-87.623177,41.881832],
-                        [-71.0589, 42.3601]
-                    ]
-                };
+                // let polyline = {
+                //     type: "polyline",
+                //     paths: [
+                //         [-122.431297, 37.7749],
+                //         // [-93.258133,44.986656],
+                //         // [-87.623177,41.881832],
+                //         [-71.0589, 42.3601]
+                //     ]
+                // };
+
 
                 let polylineGraphic = new Graphic({
                     geometry: polyline,
