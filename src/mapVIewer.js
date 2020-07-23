@@ -51,6 +51,23 @@ export class WebMapView extends React.Component {
                     }
                 };
 
+                let long = -93.258133
+                let lat = 44.986656
+
+                for(let i=1; i<this.state.a; i++, lat += 10, long += 10) {
+
+                    let point3 = {
+                        type: "point",
+                        longitude: long,
+                        latitude: lat
+                    }
+                    let pointGraphic3 = new Graphic({
+                        geometry: point3,
+                        symbol: simpleMarkerSymbol
+                    });
+                    graphicsLayer.add(pointGraphic3)
+                }
+
                 //newline
                 let polyline = new Polyline({
                     paths: [
@@ -140,6 +157,15 @@ export class WebMapView extends React.Component {
                 />
                 -73.935242
                 40.730610
+                <input type="text"
+                       onChange={async (e) =>
+                           await this.setState({
+                               a: e.target.value
+                           })
+                       }
+
+                       value={this.state.a}
+                />
                 <button onClick={this.load}>Change</button>
                 <div className="webmap" ref={this.mapRef} />
             </div>

@@ -32,7 +32,8 @@ class Dashboard extends React.Component {
         if(prevState.end !== this.state.end || prevState.start !== this.state.start || prevState.endDate !== this.state.endDate) {
             if(parseInt(this.state.end) < parseInt(this.state.start)) {
                 await this.setState({
-                    end : this.state.start
+                    end : this.state.start,
+                    endLabel: this.state.startLabel
                 })
             }
         }
@@ -52,21 +53,25 @@ class Dashboard extends React.Component {
 
     changeStartDate = (selectedItem) => {
         this.setState({
-            start: selectedItem.value
+            start: selectedItem.value,
+            startLabel: selectedItem.label
         });
     }
 
     changeEndDate = (selectedItem) => {
         this.setState({
-            end: selectedItem.value
+            end: selectedItem.value,
+            endLabel: selectedItem.label
         });
     }
 
     state = {
         origin : 'All',
         destination : 'All',
-        start : 1,
-        end : 12,
+        start : '',
+        end : '',
+        startLabel: '',
+        endLabel: '',
         date: [],
         gChart1  : '',
         gChart2  : '',
@@ -78,7 +83,6 @@ class Dashboard extends React.Component {
         showVerBar: false,
         result: {status: '', value: {heads: {vars: []}, results: {bindings: []}}, h: [], v: [], err: '', xmlOutput: ''},
         endDate: [],
-        endDate1: {value: 123,label:'123a'},
         titleOfGraph1: '',
         titleOfGraph2: '',
         titleOfGraph3: '',
@@ -246,8 +250,14 @@ class Dashboard extends React.Component {
                             })
                         }
                     }
-
                 }
+            }).then(async () =>{
+                await this.setState({
+                    start: this.state.date[0].month,
+                    end: this.state.date[this.state.date.length-1].month,
+                    startLabel: this.state.date[0].label,
+                    endLabel: this.state.date[this.state.date.length-1].label
+                })
             })
     }
 
@@ -593,7 +603,7 @@ class Dashboard extends React.Component {
                 showBar: true,
                 showPie: true,
                 showArea: true,
-                titleOfGraph1: `Flight delay reasons from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+                titleOfGraph1: `Flight delay reasons from ${this.state.origin} to ${this.state.destination} between ${this.state.startLabel} and ${this.state.endLabel}`,
                 gChart: ''
             })
             const formData = await this.createDataForDiffDelays()
@@ -641,7 +651,7 @@ class Dashboard extends React.Component {
             showBar: true,
             showPie: false,
             showArea: true,
-            titleOfGraph2: `Weather vs Non-weather delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+            titleOfGraph2: `Weather vs Non-weather delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.state.startLabel} and ${this.state.endLabel}`,
             gChart: ''
         })
         const formData = await this.createDataForWeatherDelay()
@@ -729,7 +739,7 @@ class Dashboard extends React.Component {
             showBar: true,
             showPie: true,
             showArea: true,
-            titleOfGraph3: `Average flight delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+            titleOfGraph3: `Average flight delay:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.state.startLabel} and ${this.state.endLabel}`,
             gChart: ''
         })
         const formData = await this.createDataForAirlineDelay()
@@ -776,7 +786,7 @@ class Dashboard extends React.Component {
             showBar: true,
             showPie: true,
             showArea: true,
-            titleOfGraph4: `Flight Cancellation Reason:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.month[this.state.start]} and ${this.month[this.state.end]}`,
+            titleOfGraph4: `Flight Cancellation Reason:\n For flights from ${this.state.origin} to ${this.state.destination} between ${this.state.startLabel} and ${this.state.endLabel}`,
             gChart: ''
         })
         const formData = await this.createDataForCancellation()
