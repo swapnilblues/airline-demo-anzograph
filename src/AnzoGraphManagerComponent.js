@@ -1,10 +1,9 @@
 import React from "react";
-import {combineReducers, createStore} from "redux";
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import LandingComponent from "./LandingComponent";
 import GoogleChartDemo from "./GoogleChartDemo";
 import Dashboard from "./Dashboard/Dashboard";
-import {WebMapView} from "./mapVIewer";
+import MapView from "./MapView/MapView";
 
 
 
@@ -38,7 +37,7 @@ class AnzoGraphManagerComponent extends React.Component {
                     <Route
                         path="/maps"
                         exact={true}
-                        component={WebMapView}
+                        component={MapView}
                     >
                     </Route>
                 </Router>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { loadModules } from 'esri-loader';
 
-export class WebMapView extends React.Component {
+export class WorldMap extends React.Component {
     constructor(props) {
         super(props);
         this.mapRef = React.createRef();
@@ -122,7 +122,7 @@ export class WebMapView extends React.Component {
                     container: this.mapRef.current,
                     map: map,
                     center: [-98,39],
-                    zoom: 5
+                    zoom: 4
                 });
             });
 }

@@ -5,7 +5,6 @@ import PieChart from "../PieChart";
 import { Button } from '@material-ui/core';
 import Icon from "@material-ui/core/Icon";
 import LineChart from "../LineChart";
-import ReactTableComponent from "../ReactTableComponent";
 import Select from 'react-select'
 
 
