@@ -199,7 +199,7 @@ class Dashboard extends React.Component {
                     let minmm = parseInt(data.minmm.value)
                     let maxyy = parseInt(data.maxyy.value)
                     let minyy = parseInt(data.minyy.value)
-                    console.log("Date", minmm," ",minyy," ",maxmm," ",maxyy)
+                    // console.log("Date", minmm," ",minyy," ",maxmm," ",maxyy)
 
 
 
@@ -251,7 +251,7 @@ class Dashboard extends React.Component {
                         }
                     }
                 }
-            }).then(async () =>{
+            }).then(async () => {
                 await this.setState({
                     start: this.state.date[0].month,
                     end: this.state.date[this.state.date.length-1].month,
@@ -885,30 +885,6 @@ class Dashboard extends React.Component {
                                                 onChange={this.changeStartDate}
                                             />
                                         }
-
-                                        <select className="input-flight"
-                                                onChange={async (e) =>
-                                                    await this.setState({
-                                                        start: e.target.value
-                                                    })
-                                                }
-
-                                                value={this.state.start}
-                                        >
-                                            <option value={"1"}>January, 2015</option>
-                                            <option value={"2"}>February, 2015</option>
-                                            <option value={"3"}>March, 2015</option>
-                                            <option value={"4"}>April, 2015</option>
-                                            <option value={"5"}>May, 2015</option>
-                                            <option value={"6"}>June, 2015</option>
-                                            <option value={"7"}>July, 2015</option>
-                                            <option value={"8"}>August, 2015</option>
-                                            <option value={"9"}>September, 2015</option>
-                                            <option value={"10"}>October, 2015</option>
-                                            <option value={"11"}>November, 2015</option>
-                                            <option value={"12"}>December, 2015</option>
-                                        </select>
-
                                     </span>
 
                                     <span className="list-group-item bg-info wbdv-module-item">
@@ -922,28 +898,6 @@ class Dashboard extends React.Component {
                                             />
                                         }
 
-                                        <select className="input-flight"
-                                                onChange={async (e) =>
-                                                    await this.setState({
-                                                        end: e.target.value
-                                                    })
-                                                }
-
-                                                value={this.state.end}
-                                        >
-                                            <option value={"1"}>January, 2015</option>
-                                            <option value={"2"}>February, 2015</option>
-                                            <option value={"3"}>March, 2015</option>
-                                            <option value={"4"}>April, 2015</option>
-                                            <option value={"5"}>May, 2015</option>
-                                            <option value={"6"}>June, 2015</option>
-                                            <option value={"7"}>July, 2015</option>
-                                            <option value={"8"}>August, 2015</option>
-                                            <option value={"9"}>September, 2015</option>
-                                            <option value={"10"}>October, 2015</option>
-                                            <option value={"11"}>November, 2015</option>
-                                            <option value={"12"}>December, 2015</option>
-                                        </select>
                                     </span>
 
                                     <div className="wbdv-module-item">
