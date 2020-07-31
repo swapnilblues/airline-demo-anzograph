@@ -66,21 +66,15 @@ class MapView extends React.Component {
         startLabel: '',
         endLabel: '',
         date: [],
-        gChart1  : '',
-        gChart2  : '',
-        gChart3  : '',
-        gChart4  : '',
-        showBar: false,
-        showPie: false,
-        showArea: false,
-        showVerBar: false,
         result: {status: '', value: {heads: {vars: []}, results: {bindings: []}}, h: [], v: [], err: '', xmlOutput: ''},
         endDate: [],
-        titleOfGraph1: '',
-        titleOfGraph2: '',
-        titleOfGraph3: '',
-        titleOfGraph4: '',
-        airports: [{value:'All', label:'All'}]
+        airports: [{value:'All', label:'All'}],
+        layOver: [],
+        directFlight: false,
+        orgLat: '',
+        orgLong: '',
+        destLat: '',
+        destLong: '',
     }
 
     month = {
@@ -250,6 +244,215 @@ class MapView extends React.Component {
             })
     }
 
+    createDataForLongLatOfAirport = (airport) => {
+        let airportFilter = ''
+
+        if(airport !== 'All') {
+            airportFilter = `filter (?airport_code = '${airport}')`
+        }
+
+        const f1 = new URLSearchParams()
+        let query = "prefix : <https://ontologies.semanticarts.com/raw_data#>" +
+            "prefix fl: <https://ontologies.semanticarts.com/flights/>" +
+            "prefix owl: <http://www.w3.org/2002/07/owl#>" +
+            "prefix skos:    <http://www.w3.org/2004/02/skos/core#>" +
+            `select distinct ?airport_code ?lat ?long
+                from <airline_flight_network>
+                 where {
+                 [ a fl:Airport ;
+                fl:terminalCode ?airport_code ;
+                ]
+                :lat  ?lat ;
+                :long  ?long ;` +
+            airportFilter
+        + "}"
+
+
+        f1.append('query', query)
+        f1.append('output', 'json')
+
+        return f1;
+    }
+
+    runQueryForAirportLatLong = async (airport) => {
+
+
+        const formData = await this.createDataForLongLatOfAirport(airport)
+        await fetch(`http://localhost:7070/sparql`, {
+                method: "POST",
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            }
+        )
+            .then(async (response) => {
+
+                if (response.status === 200) {
+                    let c = await response.json()
+
+                    console.log("AA", c.results.bindings[0].lat.value)
+
+                    if(airport === this.state.origin) {
+                        await this.setState({
+                            orgLong: parseFloat(c.results.bindings[0].long.value),
+                            orgLat: parseFloat(c.results.bindings[0].lat.value)
+                        })
+                    }
+                    if(airport === this.state.destination) {
+                        await this.setState({
+                            destLong: parseFloat(c.results.bindings[0].long.value),
+                            destLat: parseFloat(c.results.bindings[0].lat.value)
+                        })
+                    }
+                }
+            })
+
+    }
+
+    createDataForAllRoutes = (origin,destination) => {
+        const f1 = new URLSearchParams()
+
+        let query = "# query to see all routes from orig to dest with 1 or 2 hops\n" +
+            "prefix : <https://ontologies.semanticarts.com/raw_data#>\n" +
+            "prefix fl: <https://ontologies.semanticarts.com/flights/>\n" +
+            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +
+            "prefix skos:    <http://www.w3.org/2004/02/skos/core#>\n" +
+            "SELECT ?orgName ?dest1Name ?dest1Lat ?dest1Long ?destName\n" +
+            "from <airline_flight_network>\n" +
+            "WHERE {\n" +
+            "       ?origin a fl:Airport .\n" +
+            "#       <<?origin fl:hasRouteTo ?dest>> fl:distanceMiles ?dist .\n" +
+            "       ?origin fl:hasRouteTo ?dest1 .\n" +
+            "       optional { ?dest1 fl:hasRouteTo ?dest1 }\n" +
+            "   ?origin fl:terminalCode ?orgName .\n" +
+            "   ?dest1 fl:terminalCode ?dest1Name .\n" +
+            "   ?dest1 :lat ?dest1Lat .\n" +
+            "   ?dest1 :long ?dest1Long .\n" +
+            "   ?dest fl:terminalCode ?destName .\n" +
+            `   filter(?orgName = '${origin}')\n` +
+            `   filter(?destName = '${destination}')\n` +
+            " }\n" +
+            " group by ?orgName ?dest1Name ?dest1Lat ?dest1Long ?destName\n"
+
+
+        f1.append('query', query)
+        f1.append('output', 'json')
+
+        return f1;
+
+    }
+
+    createDataForDirectRoutes = (origin,destination) => {
+        const f1 = new URLSearchParams()
+
+        let query = "# Insert SPARQL Query here, and click [Run] button\n" +
+            "# query to see all routes from orig to dest with 1 or 2 hops\n" +
+            "prefix : <https://ontologies.semanticarts.com/raw_data#>\n" +
+            "prefix fl: <https://ontologies.semanticarts.com/flights/>\n" +
+            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +
+            "prefix skos:    <http://www.w3.org/2004/02/skos/core#>\n" +
+            "select (count (*) as ?num)\n" +
+            "from <airline_flight_network>\n" +
+            "WHERE {\n" +
+            "       ?origin a fl:Airport .\n" +
+            "#       <<?origin fl:hasRouteTo ?dest>> fl:distanceMiles ?dist .\n" +
+            "       ?origin fl:hasRouteTo ?dest .\n" +
+            "   ?origin fl:terminalCode ?orgName .\n" +
+            "   ?dest fl:terminalCode ?destName .\n" +
+            `   filter(?orgName = '${origin}')\n` +
+            `   filter(?destName = '${destination}')\n` +
+            " }\n" +
+            "\n"
+
+
+        f1.append('query', query)
+        f1.append('output', 'json')
+
+        return f1;
+
+    }
+
+    runQueryForAllRoutes = async () => {
+
+        await this.runQueryForAirportLatLong(this.state.origin)
+        await this.runQueryForAirportLatLong(this.state.destination)
+
+        const formData = await this.createDataForAllRoutes(this.state.origin,this.state.destination)
+        const formData1 = await this.createDataForDirectRoutes(this.state.origin,this.state.destination)
+
+        await fetch(`http://localhost:7070/sparql`, {
+                method: "POST",
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            }
+        )
+            .then(async (response) => {
+
+                if (response.status === 200) {
+                    let c = await response.json()
+                    let routes = c.results.bindings
+                    console.log("Route",routes)
+                    await this.setState({
+                        layOver: []
+                    })
+                    for(let i=0; i< routes.length; i++) {
+                        let route = routes[i];
+                        // console.log("Route", route.dest1Name.value)
+                        // if(route.dest1Name.value === this.state.destination) {
+                        //     this.setState({
+                        //         directFlight: true
+                        //     })
+                        //     continue;
+                        // }
+                        this.setState({
+                            layOver: [...this.state.layOver,
+                                        {
+                                            code: route.dest1Name.value,
+                                            lat: parseFloat(route.dest1Lat.value),
+                                            long: parseFloat(route.dest1Long.value)
+                                        }
+                                    ]
+                        })
+                    }
+                    console.log("Direct", this.state.directFlight)
+                    console.log("LayOver info", this.state.layOver)
+                }
+            })
+
+        await fetch(`http://localhost:7070/sparql`, {
+                method: "POST",
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                body: formData1
+            }
+        )
+            .then(async (response) => {
+
+                if (response.status === 200) {
+                    let c = await response.json()
+                    console.log("T/F1",c)
+                    let val = parseInt(c.results.bindings[0].num.value)
+                    console.log("T/F",val)
+
+                    await this.setState({
+                        directFlight : false
+                    })
+
+                    if(val === 1) {
+                        await this.setState({
+                            directFlight : true
+                        })
+                    }
+                }
+            })
+
+
+    }
+
 
 
     render() {
@@ -330,13 +533,26 @@ class MapView extends React.Component {
 
                                 <div className="wbdv-module-item">
                                     <div className="d-flex justify-content-center">
-                                        <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
-                                                onClick = {  () => {
-                                                }
-                                                }
-                                        >
-                                            Submit
-                                        </Button>
+                                        { this.state.origin !== 'All' && this.state.destination !== 'All' &&
+                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
+                                                    onClick={async () => {
+                                                        await this.runQueryForAllRoutes()
+                                                    }
+                                                    }
+                                            >
+                                                Submit
+                                            </Button>
+                                        }
+                                        {
+                                            (this.state.origin === 'All' || this.state.destination === 'All') &&
+                                                <div>
+                                                    <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
+                                                           disabled
+                                                    >
+                                                    Submit
+                                                    </Button>
+                                                </div>
+                                        }
                                     </div>
                                 </div>
 
@@ -345,7 +561,16 @@ class MapView extends React.Component {
 
                         </div>
                         <div className="col-sm-9">
-                           <WorldMap/>
+                           <WorldMap
+                               origin={this.state.origin}
+                               destination={this.state.destination}
+                               orgLat={this.state.orgLat}
+                               orgLong={this.state.orgLong}
+                               destLat={this.state.destLat}
+                               destLong={this.state.destLong}
+                               directFlight={this.state.directFlight}
+                               layOver={this.state.layOver}
+                           />
                         </div>
                     </div>
 

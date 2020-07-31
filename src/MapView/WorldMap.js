@@ -15,7 +15,8 @@ export class WorldMap extends React.Component {
             latitude: 42.3601
         },
         longitude: -122.431297,
-        latitude: 37.7749
+        latitude: 37.7749,
+        width: 2
     }
 
     load = () => {
@@ -33,14 +34,18 @@ export class WorldMap extends React.Component {
                 });
                 map.add(graphicsLayer);
 
-                let point = {
+                let origin = {
                     type: "point",
-                    longitude: this.state.longitude,
-                    latitude: this.state.latitude
+                    longitude: this.props.orgLong,
+                    latitude: this.props.orgLat
                 }
 
 
-                let point1 = this.state.point1
+                let dest = {
+                    type: "point",
+                    longitude: this.props.destLong,
+                    latitude: this.props.destLat
+                }
 
                 let simpleMarkerSymbol = {
                     type: "simple-marker",//row.get('policyID'),
@@ -79,25 +84,25 @@ export class WorldMap extends React.Component {
                     ]
                 })
 
-                polyline = geometryEngine.geodesicDensify(polyline,10000);
+                polyline = geometryEngine.geodesicDensify(polyline,100000);
 
-                let pointGraphic = new Graphic({
-                    geometry: point,
+                let orginGraphic = new Graphic({
+                    geometry: origin,
                     symbol: simpleMarkerSymbol
                 });
 
-                let pointGraphic1 = new Graphic({
-                    geometry: point1,
+                let destGraphic = new Graphic({
+                    geometry: dest,
                     symbol: simpleMarkerSymbol
                 });
 
-                graphicsLayer.add(pointGraphic);
-                graphicsLayer.add(pointGraphic1);
+                graphicsLayer.add(orginGraphic);
+                graphicsLayer.add(destGraphic);
 
                 let simpleLineSymbol = {
                     type: "simple-line",
                     color: [0, 0, 0], // black
-                    width: 2
+                    width: this.state.width
                 };
 
                 // let polyline = {
@@ -116,7 +121,7 @@ export class WorldMap extends React.Component {
                     symbol: simpleLineSymbol
                 });
 
-                graphicsLayer.add(polylineGraphic);
+                // graphicsLayer.add(polylineGraphic);
 
                 this.view = new MapView({
                     container: this.mapRef.current,
@@ -124,10 +129,22 @@ export class WorldMap extends React.Component {
                     center: [-98,39],
                     zoom: 4
                 });
+
             });
+
 }
     componentDidMount() {
         this.load()
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(    prevProps.orgLat !== this.props.orgLat
+            || prevProps.orgLong !== this.props.orgLong
+            || prevProps.destLat !== this.props.destLat
+            || prevProps.destLong !== this.props.destLong
+        )
+            this.load()
+
     }
 
     render() {
@@ -165,6 +182,16 @@ export class WorldMap extends React.Component {
                        }
 
                        value={this.state.a}
+                />
+                Width:
+                <input type="text"
+                       onChange={async (e) =>
+                           await this.setState({
+                               width: e.target.value
+                           })
+                       }
+
+                       value={this.state.width}
                 />
                 <button onClick={this.load}>Change</button>
                 <div className="webmap" ref={this.mapRef} />
