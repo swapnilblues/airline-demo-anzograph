@@ -34,6 +34,34 @@ export class WorldMap extends React.Component {
                 });
                 map.add(graphicsLayer);
 
+
+                let simpleMarkerSymbolForOrigin = {
+                    type: "simple-marker",//row.get('policyID'),
+                    color: [0,0,255], // blue
+                    outline: {
+                        color: [255, 255, 255], // white
+                        width: 1
+                    }
+                };
+
+                let simpleMarkerSymbolForDest = {
+                    type: "simple-marker",//row.get('policyID'),
+                    color: [255,0,0], // red
+                    outline: {
+                        color: [255, 255, 255], // white
+                        width: 1
+                    }
+                };
+
+                let simpleMarkerSymbol = {
+                    type: "simple-marker",//row.get('policyID'),
+                    color: [0,0,0], // black
+                    outline: {
+                        color: [255, 255, 255], // white
+                        width: 1
+                    }
+                };
+
                 let origin = {
                     type: "point",
                     longitude: this.props.orgLong,
@@ -47,15 +75,18 @@ export class WorldMap extends React.Component {
                     latitude: this.props.destLat
                 }
 
-                let simpleMarkerSymbol = {
-                    type: "simple-marker",//row.get('policyID'),
-                    color: [0,0,0], // black
-                    outline: {
-                        color: [255, 255, 255], // white
-                        width: 1
-                    }
-                };
+                let orginGraphic = new Graphic({
+                    geometry: origin,
+                    symbol: simpleMarkerSymbolForOrigin
+                });
 
+                let destGraphic = new Graphic({
+                    geometry: dest,
+                    symbol: simpleMarkerSymbolForDest
+                });
+
+
+                //experimentation
                 let long = -93.258133
                 let lat = 44.986656
 
@@ -73,37 +104,74 @@ export class WorldMap extends React.Component {
                     graphicsLayer.add(pointGraphic3)
                 }
 
-                //newline
-                let polyline = new Polyline({
-                    paths: [
-                        // [-122.431297, 37.7749],
-                        [this.state.longitude,this.state.latitude],
-                        // [-93.258133,44.986656],
-                        // [-87.623177,41.881832],
-                        [-71.0589, 42.3601]
-                    ]
-                })
 
-                polyline = geometryEngine.geodesicDensify(polyline,100000);
-
-                let orginGraphic = new Graphic({
-                    geometry: origin,
-                    symbol: simpleMarkerSymbol
-                });
-
-                let destGraphic = new Graphic({
-                    geometry: dest,
-                    symbol: simpleMarkerSymbol
-                });
-
-                graphicsLayer.add(orginGraphic);
-                graphicsLayer.add(destGraphic);
 
                 let simpleLineSymbol = {
                     type: "simple-line",
-                    color: [0, 0, 0], // black
+                    color: [169,169,169], // dark-grey
                     width: this.state.width
                 };
+
+                let simpleLineSymbolDirect = {
+                    type: "simple-line",
+                    color: [0, 128, 0], // green
+                    width: this.state.width
+                };
+
+
+
+                //layOver points
+
+                for(let i=0;i<this.props.layOver.length;i++) {
+                    let currLayOver = this.props.layOver[i]
+                    // console.log("Curr Layover", currLayOver)
+                    let currLayOverPoint = {
+                        type: "point",
+                        longitude: currLayOver.long,
+                        latitude: currLayOver.lat
+                    }
+
+                    let currLayOverPointGraphic = new Graphic({
+                        geometry: currLayOverPoint,
+                        symbol: simpleMarkerSymbol
+                    });
+
+                    graphicsLayer.add(currLayOverPointGraphic)
+
+                    let originToLayOver = new Polyline({
+                        paths: [
+                            [this.props.orgLong,this.props.orgLat],
+                            [currLayOver.long,currLayOver.lat]
+                        ]
+                    })
+
+                    let layOverToDest = new Polyline({
+                        paths: [
+                            [currLayOver.long,currLayOver.lat],
+                            [this.props.destLong,this.props.destLat]
+                        ]
+                    })
+
+                    originToLayOver = geometryEngine.geodesicDensify(originToLayOver,10000);
+                    layOverToDest = geometryEngine.geodesicDensify(layOverToDest,10000);
+
+                    let originToLayOverGraphic = new Graphic({
+                        geometry: originToLayOver,
+                        symbol: simpleLineSymbol
+                    })
+
+                    let layOverToDestGraphic = new Graphic({
+                        geometry: layOverToDest,
+                        symbol: simpleLineSymbol
+                    })
+
+                    graphicsLayer.add(originToLayOverGraphic)
+                    graphicsLayer.add(layOverToDestGraphic)
+                }
+
+
+
+
 
                 // let polyline = {
                 //     type: "polyline",
@@ -115,13 +183,30 @@ export class WorldMap extends React.Component {
                 //     ]
                 // };
 
+                graphicsLayer.add(orginGraphic);
+                graphicsLayer.add(destGraphic);
 
-                let polylineGraphic = new Graphic({
-                    geometry: polyline,
-                    symbol: simpleLineSymbol
-                });
+                //source-destination line
 
-                // graphicsLayer.add(polylineGraphic);
+                if(this.props.directFlight === true) {
+                    let directRoute = new Polyline({
+                        paths: [
+                            [this.props.orgLong,this.props.orgLat],
+                            [this.props.destLong,this.props.destLat]
+                        ]
+                    })
+                    directRoute = geometryEngine.geodesicDensify(directRoute,10000);
+
+                    let directRouteGraphic = new Graphic({
+                        geometry: directRoute,
+                        symbol: simpleLineSymbolDirect
+                    });
+
+                    graphicsLayer.add(directRouteGraphic);
+
+
+                }
+
 
                 this.view = new MapView({
                     container: this.mapRef.current,
@@ -142,6 +227,7 @@ export class WorldMap extends React.Component {
             || prevProps.orgLong !== this.props.orgLong
             || prevProps.destLat !== this.props.destLat
             || prevProps.destLong !== this.props.destLong
+            || prevProps.directFlight !== this.props.directFlight
         )
             this.load()
 
