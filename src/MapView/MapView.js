@@ -75,6 +75,7 @@ class MapView extends React.Component {
         orgLong: '',
         destLat: '',
         destLong: '',
+        query: ''
     }
 
     month = {
@@ -396,7 +397,8 @@ class MapView extends React.Component {
                     let routes = c.results.bindings
                     console.log("Route",routes)
                     await this.setState({
-                        layOver: []
+                        layOver: [],
+                        query: 'all-routes'
                     })
                     for(let i=0; i< routes.length; i++) {
                         let route = routes[i];
@@ -570,6 +572,7 @@ class MapView extends React.Component {
                                destLong={this.state.destLong}
                                directFlight={this.state.directFlight}
                                layOver={this.state.layOver}
+                               query={this.state.query}
                            />
                         </div>
                     </div>

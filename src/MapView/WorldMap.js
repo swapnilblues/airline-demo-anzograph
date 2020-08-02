@@ -16,7 +16,8 @@ export class WorldMap extends React.Component {
         },
         longitude: -122.431297,
         latitude: 37.7749,
-        width: 2
+        width: 1,
+        lineColor: [0,0,0]
     }
 
     load = () => {
@@ -108,7 +109,7 @@ export class WorldMap extends React.Component {
 
                 let simpleLineSymbol = {
                     type: "simple-line",
-                    color: [169,169,169], // dark-grey
+                    color: this.state.lineColor,//[169,169,169], // dark-grey
                     width: this.state.width
                 };
 
@@ -228,6 +229,7 @@ export class WorldMap extends React.Component {
             || prevProps.destLat !== this.props.destLat
             || prevProps.destLong !== this.props.destLong
             || prevProps.directFlight !== this.props.directFlight
+            || prevProps.query !== this.props.query
         )
             this.load()
 
