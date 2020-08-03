@@ -70,7 +70,8 @@ class MapView extends React.Component {
         endDate: [],
         airports: [{value:'All', label:'All'}],
         layOver: [],
-        directFlight: false,
+        layOverTest: [],
+        directFlight: '',
         orgLat: '',
         orgLong: '',
         destLat: '',
@@ -456,6 +457,132 @@ class MapView extends React.Component {
     }
 
 
+    //testing bottleneck
+
+    createDataForTest = (origin,destination) => {
+        const f1 = new URLSearchParams()
+
+        let query = "prefix : <https://ontologies.semanticarts.com/raw_data#>\n" +
+            "prefix fl: <https://ontologies.semanticarts.com/flights/>\n" +
+            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +
+            "prefix skos:    <http://www.w3.org/2004/02/skos/core#>\n" +
+            "#select (count(*) as ?cnt) \n" +
+            "SELECT ?orgName ?orig_lat ?orig_long ?stop1Name ?stop1_lat ?stop1_long ?destName ?dest_lat ?dest_long \n" +
+            "from <airline_flight_network>\n" +
+            "WHERE {\n" +
+            "    {\n" +
+            "        ?origin a fl:Airport .\n" +
+            "        ?origin fl:hasRouteTo ?dest .\n" +
+            "        ?origin fl:terminalCode ?orgName .\n" +
+            "        ?origin :lat ?orig_lat . \n" +
+            "        ?origin :long ?orig_long . \n" +
+            "        ?dest :lat ?dest_lat . \n" +
+            "        ?dest :long ?dest_long . \n" +
+            "        ?dest fl:terminalCode ?destName .\n" +
+            "        BIND('' as ?stop1) \n" +
+            `        filter(?orgName = '${origin}')\n` +
+            `        filter(?destName = '${destination}') \n` +
+            "    }\n" +
+            "    union \n" +
+            "    {\n" +
+            "        ?origin a fl:Airport .\n" +
+            "        ?origin fl:hasRouteTo ?stop1 .\n" +
+            "        ?stop1 fl:hasRouteTo ?dest . \n" +
+            "        ?origin fl:terminalCode ?orgName .\n" +
+            "        ?origin :lat ?orig_lat . \n" +
+            "        ?origin :long ?orig_long . \n" +
+            "        ?stop1 fl:terminalCode ?stop1Name .\n" +
+            "        ?stop1 :lat ?stop1_lat . \n" +
+            "        ?stop1 :long ?stop1_long . \n" +
+            "        ?dest :lat ?dest_lat . \n" +
+            "        ?dest :long ?dest_long . \n" +
+            "        ?dest fl:terminalCode ?destName .\n" +
+            `        filter(?orgName = '${origin}')\n` +
+            `        filter(?destName = '${destination}') \n` +
+            "    }\n" +
+            "  }"
+
+        // let query = "# query to see all routes from orig to dest with 1 or 2 hops\n" +
+        //     "prefix : <https://ontologies.semanticarts.com/raw_data#>\n" +
+        //     "prefix fl: <https://ontologies.semanticarts.com/flights/>\n" +
+        //     "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +
+        //     "prefix skos:    <http://www.w3.org/2004/02/skos/core#>\n" +
+        //     "SELECT ?orgName ?dest1Name ?dest1Lat ?dest1Long ?destName\n" +
+        //     "from <airline_flight_network>\n" +
+        //     "WHERE {\n" +
+        //     "       ?origin a fl:Airport .\n" +
+        //     "#       <<?origin fl:hasRouteTo ?dest>> fl:distanceMiles ?dist .\n" +
+        //     "       ?origin fl:hasRouteTo ?dest1 .\n" +
+        //     "       optional { ?dest1 fl:hasRouteTo ?dest1 }\n" +
+        //     "   ?origin fl:terminalCode ?orgName .\n" +
+        //     "   ?dest1 fl:terminalCode ?dest1Name .\n" +
+        //     "   ?dest1 :lat ?dest1Lat .\n" +
+        //     "   ?dest1 :long ?dest1Long .\n" +
+        //     "   ?dest fl:terminalCode ?destName .\n" +
+        //     `   filter(?orgName = '${origin}')\n` +
+        //     `   filter((?destName = '${destination}') || (?dest1Name = '${destination}'))\n` +
+        //     " }\n" +
+        //     " group by ?orgName ?dest1Name ?dest1Lat ?dest1Long ?destName "
+
+
+        f1.append('query', query)
+        f1.append('output', 'json')
+
+        return f1;
+
+    }
+
+    runQueryForTest = async () => {
+
+        const formData = await this.createDataForTest(this.state.origin,this.state.destination)
+        await fetch(`http://localhost:7070/sparql`, {
+                method: "POST",
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            }
+        )
+            .then(async (response) => {
+
+                if (response.status === 200) {
+                    let c = await response.json()
+
+                    console.log("AA1", c.results.bindings)
+
+                    await this.setState({
+                        layOver: [],
+                        query: 'all-routes',
+                        orgLat: parseFloat(c.results.bindings[0].orig_lat.value),
+                        orgLong: parseFloat(c.results.bindings[0].orig_long.value),
+                        destLat: parseFloat(c.results.bindings[0].dest_lat.value),
+                        destLong: parseFloat(c.results.bindings[0].dest_long.value),
+                    })
+
+                    let dF = false
+                    for(let i=0; i < c.results.bindings.length; i++) {
+                        let curr = c.results.bindings[i]
+                        if(!curr.stop1Name) {
+                           dF = true
+                        } else {
+                            await this.setState({
+                                layOver: [...this.state.layOver,
+                                    {
+                                        code: curr.stop1Name.value,
+                                        lat: parseFloat(curr.stop1_lat.value),
+                                        long: parseFloat(curr.stop1_long.value),
+                                    }
+                                ]
+                            })
+                        }
+                    }
+                    await this.setState({
+                        directFlight : dF
+                    })
+                }
+            })
+    }
+
 
     render() {
         return (
@@ -538,7 +665,8 @@ class MapView extends React.Component {
                                         { this.state.origin !== 'All' && this.state.destination !== 'All' &&
                                             <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
                                                     onClick={async () => {
-                                                        await this.runQueryForAllRoutes()
+                                                        // await this.runQueryForAllRoutes()
+                                                        await this.runQueryForTest()
                                                     }
                                                     }
                                             >
