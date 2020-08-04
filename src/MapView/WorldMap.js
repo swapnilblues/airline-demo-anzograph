@@ -85,27 +85,7 @@ export class WorldMap extends React.Component {
                     geometry: dest,
                     symbol: simpleMarkerSymbolForDest
                 });
-
-
-                //experimentation
-                let long = -93.258133
-                let lat = 44.986656
-
-                for(let i=1; i<this.state.a; i++, lat += 10, long += 10) {
-
-                    let point3 = {
-                        type: "point",
-                        longitude: long,
-                        latitude: lat
-                    }
-                    let pointGraphic3 = new Graphic({
-                        geometry: point3,
-                        symbol: simpleMarkerSymbol
-                    });
-                    graphicsLayer.add(pointGraphic3)
-                }
-
-
+                
 
                 let simpleLineSymbol = {
                     type: "simple-line",
@@ -171,20 +151,6 @@ export class WorldMap extends React.Component {
                     graphicsLayer.add(layOverToDestGraphic)
                 }
 
-
-
-
-
-                // let polyline = {
-                //     type: "polyline",
-                //     paths: [
-                //         [-122.431297, 37.7749],
-                //         // [-93.258133,44.986656],
-                //         // [-87.623177,41.881832],
-                //         [-71.0589, 42.3601]
-                //     ]
-                // };
-
                 graphicsLayer.add(orginGraphic);
                 graphicsLayer.add(destGraphic);
 
@@ -239,50 +205,6 @@ export class WorldMap extends React.Component {
     render() {
         return (
             <div>
-                {/*<div style={{ width: '100vw', height: '100vh' }}>*/}
-                {/*    <WebMap id="6627e1dd5f594160ac60f9dfc411673f" />*/}
-                {/*</div>*/}
-
-                <input type="text"
-                       onChange={async (e) =>
-                           await this.setState({
-                               longitude: e.target.value
-                           })
-                       }
-
-                       value={this.state.longitude}
-                />
-                <input type="text"
-                       onChange={async (e) =>
-                           await this.setState({
-                               latitude: e.target.value
-                           })
-                       }
-
-                       value={this.state.latitude}
-                />
-                -73.935242
-                40.730610
-                <input type="text"
-                       onChange={async (e) =>
-                           await this.setState({
-                               a: e.target.value
-                           })
-                       }
-
-                       value={this.state.a}
-                />
-                Width:
-                <input type="text"
-                       onChange={async (e) =>
-                           await this.setState({
-                               width: e.target.value
-                           })
-                       }
-
-                       value={this.state.width}
-                />
-                <button onClick={this.load}>Change</button>
                 <div className="webmap" ref={this.mapRef} />
             </div>
 
