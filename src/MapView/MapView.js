@@ -4,6 +4,7 @@ import { Button } from '@material-ui/core';
 import Icon from "@material-ui/core/Icon";
 import Select from 'react-select'
 import {WorldMap} from "./WorldMap";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 
 class MapView extends React.Component {
@@ -412,50 +413,46 @@ class MapView extends React.Component {
                                 <div className="wbdv-module-item">
                                     <div className="d-flex justify-content-center">
                                         { this.state.origin !== 'All' && this.state.destination !== 'All' &&
-                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
-                                                    onClick={async () => {
-                                                        await this.runQueryForAllRoutes()
-                                                    }
-                                                    }
-                                            >
-                                                Submit
-                                            </Button>
-                                        }
-                                        { this.state.origin !== 'All' && this.state.destination !== 'All' &&
-                                            <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
-                                                    onClick={async () => {
-                                                        await this.runQueryForBestRoute()
-                                                    }
-                                                    }
-                                            >
-                                                Submit1
-                                            </Button>
-                                        }
-                                        {
-                                            (   this.state.origin === 'All' ||
-                                                this.state.destination === 'All' ||
-                                                this.state.origin === this.state.destination
-                                            ) &&
-                                                <div>
-                                                    <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
-                                                           disabled
-                                                    >
-                                                    Submit
-                                                    </Button>
-                                                </div>
-                                        }
-                                        {
-                                            (   this.state.origin === 'All' ||
-                                                this.state.destination === 'All' ||
-                                                this.state.origin === this.state.destination
-                                            ) &&
-                                            <div>
-                                                <Button variant="contained" size="large" endIcon={<Icon>send</Icon>}
-                                                        disabled
+
+                                            <ButtonGroup orientation="vertical" aria-label="vertical contained primary button group" variant="contained">
+                                                <Button endIcon={<Icon>send</Icon>}
+                                                        onClick={async () => {
+                                                            await this.runQueryForAllRoutes()
+                                                        }
+                                                        }
                                                 >
-                                                    Submit1
+                                                    Get All Possible Routes
                                                 </Button>
-                                            </div>
+                                                <br/>
+                                                <Button endIcon={<Icon>send</Icon>}
+                                                        onClick={async () => {
+                                                            await this.runQueryForBestRoute()
+                                                        }
+                                                        }
+                                                >
+                                                    Get Best Possible Route
+                                                </Button>
+
+                                            </ButtonGroup>
+
+                                        }
+                                        {
+                                            (   this.state.origin === 'All' ||
+                                                this.state.destination === 'All' ||
+                                                this.state.origin === this.state.destination
+                                            ) &&
+                                            <ButtonGroup disabled orientation="vertical" aria-label="vertical contained primary button group" variant="contained">
+                                                <Button endIcon={<Icon>send</Icon>}
+                                                >
+                                                    Get All Possible Routes
+                                                </Button>
+                                                <br/>
+                                                <Button endIcon={<Icon>send</Icon>}
+                                                >
+                                                    Get Best Possible Route
+                                                </Button>
+
+                                            </ButtonGroup>
                                         }
                                     </div>
                                 </div>
