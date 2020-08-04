@@ -5,6 +5,10 @@ import Icon from "@material-ui/core/Icon";
 import Select from 'react-select'
 import {WorldMap} from "./WorldMap";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import {Link} from "react-router-dom";
+import Tab from "@material-ui/core/Tab";
 
 
 class MapView extends React.Component {
@@ -394,6 +398,26 @@ class MapView extends React.Component {
 
                             <ul className="list-group wbdv-module-list">
 
+                                    <span className="list-group-item bg-secondary wbdv-module-item">
+                                        <Paper square>
+                                            <Tabs
+                                                indicatorColor="secondary.dark"
+                                                textColor="primary"
+                                                aria-label="disabled tabs example"
+                                            >
+
+                                             <Link to={`/dashboard`}>
+                                                <Tab label="Go to Chart View">
+                                                </Tab>
+                                             </Link>
+                                             <Link to={`/maps`}>
+                                                <Tab label="Go to Map View">
+                                                x   </Tab>
+                                             </Link>
+                                             </Tabs>
+                                         </Paper>
+                                    </span>
+                                
                                     <span className="list-group-item bg-info wbdv-module-item">
 
                                         <span className="wbdv-module-item-title text-dark">Origin</span>

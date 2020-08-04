@@ -6,6 +6,10 @@ import { Button } from '@material-ui/core';
 import Icon from "@material-ui/core/Icon";
 import LineChart from "../LineChart";
 import Select from 'react-select'
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import {Link} from "react-router-dom";
 
 
 class Dashboard extends React.Component {
@@ -831,8 +835,27 @@ class Dashboard extends React.Component {
                         <div className="row align-items-start">
                             <div className="col-sm-3 bg-dark">
 
-
                                 <ul className="list-group wbdv-module-list">
+
+                                    <span className="list-group-item bg-secondary wbdv-module-item">
+                                        <Paper square>
+                                            <Tabs
+                                               indicatorColor="secondary.dark"
+                                               textColor="primary"
+                                               aria-label="disabled tabs example"
+                                            >
+
+                                             <Link to={`/dashboard`}>
+                                                <Tab label="Go to Chart View">
+                                                </Tab>
+                                             </Link>
+                                             <Link to={`/maps`}>
+                                                <Tab label="Go to Map View">
+                                                x   </Tab>
+                                             </Link>
+                                             </Tabs>
+                                         </Paper>
+                                    </span>
 
                                     <span className="list-group-item bg-info wbdv-module-item">
 
