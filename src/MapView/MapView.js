@@ -474,7 +474,7 @@ class MapView extends React.Component {
                                                         }
                                                         }
                                                 >
-                                                    Get All Possible Routes
+                                                    SHOW ALL ROUTES
                                                 </Button>
                                                 <br/>
                                                 <Button endIcon={<Icon>send</Icon>}
@@ -483,7 +483,7 @@ class MapView extends React.Component {
                                                         }
                                                         }
                                                 >
-                                                    Get Best Possible Route
+                                                    SHORTEST PATH ROUTE
                                                 </Button>
 
                                             </ButtonGroup>
@@ -497,12 +497,12 @@ class MapView extends React.Component {
                                             <ButtonGroup disabled orientation="vertical" aria-label="vertical contained primary button group" variant="contained">
                                                 <Button endIcon={<Icon>send</Icon>}
                                                 >
-                                                    Get All Possible Routes
+                                                    SHOW ALL ROUTES
                                                 </Button>
                                                 <br/>
                                                 <Button endIcon={<Icon>send</Icon>}
                                                 >
-                                                    Get Best Possible Route
+                                                    SHORTEST PATH ROUTE
                                                 </Button>
 
                                             </ButtonGroup>
