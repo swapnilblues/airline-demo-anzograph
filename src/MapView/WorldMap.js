@@ -85,7 +85,7 @@ export class WorldMap extends React.Component {
                     geometry: dest,
                     symbol: simpleMarkerSymbolForDest
                 });
-                
+
 
                 let simpleLineSymbol = {
                     type: "simple-line",
