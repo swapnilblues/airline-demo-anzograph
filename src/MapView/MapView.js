@@ -417,7 +417,7 @@ class MapView extends React.Component {
                                              </Tabs>
                                          </Paper>
                                     </span>
-                                
+
                                     <span className="list-group-item bg-info wbdv-module-item">
 
                                         <span className="wbdv-module-item-title text-dark">Origin</span>
