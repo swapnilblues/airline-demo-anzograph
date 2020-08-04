@@ -235,35 +235,48 @@ class MapView extends React.Component {
 
                     console.log("AA1", c.results.bindings)
 
-                    await this.setState({
-                        layOver: [],
-                        orgLat: parseFloat(c.results.bindings[0].orig_lat.value),
-                        orgLong: parseFloat(c.results.bindings[0].orig_long.value),
-                        destLat: parseFloat(c.results.bindings[0].dest_lat.value),
-                        destLong: parseFloat(c.results.bindings[0].dest_long.value),
-                    })
+                    if(c.results.bindings.length > 0) {
 
-                    let dF = false
-                    for(let i=0; i < c.results.bindings.length; i++) {
-                        let curr = c.results.bindings[i]
-                        if(!curr.stop1Name) {
-                           dF = true
-                        } else {
-                            await this.setState({
-                                layOver: [...this.state.layOver,
-                                    {
-                                        code: curr.stop1Name.value,
-                                        lat: parseFloat(curr.stop1_lat.value),
-                                        long: parseFloat(curr.stop1_long.value),
-                                    }
-                                ]
-                            })
+                        await this.setState({
+                            layOver: [],
+                            orgLat: parseFloat(c.results.bindings[0].orig_lat.value),
+                            orgLong: parseFloat(c.results.bindings[0].orig_long.value),
+                            destLat: parseFloat(c.results.bindings[0].dest_lat.value),
+                            destLong: parseFloat(c.results.bindings[0].dest_long.value),
+                        })
+
+                        let dF = false
+                        for (let i = 0; i < c.results.bindings.length; i++) {
+                            let curr = c.results.bindings[i]
+                            if (!curr.stop1Name) {
+                                dF = true
+                            } else {
+                                await this.setState({
+                                    layOver: [...this.state.layOver,
+                                        {
+                                            code: curr.stop1Name.value,
+                                            lat: parseFloat(curr.stop1_lat.value),
+                                            long: parseFloat(curr.stop1_long.value),
+                                        }
+                                    ]
+                                })
+                            }
                         }
+                        await this.setState({
+                            directFlight: dF,
+                            query: 'all-routes'
+                        })
+                    } else {
+                        await this.setState({
+                            layOver: [],
+                            orgLat: '',
+                            orgLong: '',
+                            destLat: '',
+                            destLong: '',
+                            directFlight: '',
+                            query: 'all-routes'
+                        })
                     }
-                    await this.setState({
-                        directFlight : dF,
-                        query: 'all-routes'
-                    })
                 }
             })
     }
@@ -324,32 +337,44 @@ class MapView extends React.Component {
                     console.log("Best Route", c.results.bindings)
                     console.log("Best Route length", c.results.bindings.length)
 
-                    await this.setState({
-                        layOver: []
-                    })
-                    if(c.results.bindings.length === 3) {
+                    if(c.results.bindings.length > 0) {
                         await this.setState({
-                            directFlight: false,
-                            destLat: parseFloat(c.results.bindings[2].dest_lat.value),
-                            destLong: parseFloat(c.results.bindings[2].dest_long.value),
-                            layOver: [{
-                                code: c.results.bindings[1].destName.value,
-                                lat: parseFloat(c.results.bindings[1].dest_lat.value),
-                                long: parseFloat(c.results.bindings[1].dest_long.value),
-                            }]
+                            layOver: []
                         })
-                    }else if(c.results.bindings.length === 2){
+                        if (c.results.bindings.length === 3) {
+                            await this.setState({
+                                directFlight: false,
+                                destLat: parseFloat(c.results.bindings[2].dest_lat.value),
+                                destLong: parseFloat(c.results.bindings[2].dest_long.value),
+                                layOver: [{
+                                    code: c.results.bindings[1].destName.value,
+                                    lat: parseFloat(c.results.bindings[1].dest_lat.value),
+                                    long: parseFloat(c.results.bindings[1].dest_long.value),
+                                }]
+                            })
+                        } else if (c.results.bindings.length === 2) {
+                            await this.setState({
+                                directFlight: true,
+                                destLat: parseFloat(c.results.bindings[1].dest_lat.value),
+                                destLong: parseFloat(c.results.bindings[1].dest_long.value),
+                            })
+                        }
                         await this.setState({
-                            directFlight: true,
-                            destLat: parseFloat(c.results.bindings[1].dest_lat.value),
-                            destLong: parseFloat(c.results.bindings[1].dest_long.value),
+                            query: 'best-route',
+                            orgLat: parseFloat(c.results.bindings[0].dest_lat.value),
+                            orgLong: parseFloat(c.results.bindings[0].dest_long.value)
+                        })
+                    } else {
+                        await this.setState({
+                            layOver: [],
+                            orgLat: '',
+                            orgLong: '',
+                            destLat: '',
+                            destLong: '',
+                            directFlight: '',
+                            query: 'best-route'
                         })
                     }
-                    await this.setState({
-                        query: 'best-route',
-                        orgLat: parseFloat(c.results.bindings[0].dest_lat.value),
-                        orgLong: parseFloat(c.results.bindings[0].dest_long.value)
-                    })
 
 
                 }

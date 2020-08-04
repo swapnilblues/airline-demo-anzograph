@@ -105,7 +105,7 @@ export class WorldMap extends React.Component {
 
                 for(let i=0;i<this.props.layOver.length;i++) {
                     let currLayOver = this.props.layOver[i]
-                    console.log("WN")
+
                     // console.log("Curr Layover", currLayOver)
                     let currLayOverPoint = {
                         type: "point",
