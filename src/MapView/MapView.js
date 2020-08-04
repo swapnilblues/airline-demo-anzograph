@@ -437,7 +437,11 @@ class MapView extends React.Component {
 
                                 <div className="wbdv-module-item">
                                     <div className="d-flex justify-content-center">
-                                        { this.state.origin !== 'All' && this.state.destination !== 'All' &&
+                                        {
+                                            (   this.state.origin !== 'All' &&
+                                                this.state.destination !== 'All' &&
+                                                this.state.origin !== this.state.destination
+                                            ) &&
 
                                             <ButtonGroup orientation="vertical" aria-label="vertical contained primary button group" variant="contained">
                                                 <Button endIcon={<Icon>send</Icon>}
