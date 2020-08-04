@@ -40,25 +40,25 @@ export class WorldMap extends React.Component {
                     type: "simple-marker",//row.get('policyID'),
                     color: [0,0,255], // blue
                     outline: {
-                        color: [255, 255, 255], // white
+                        color: [0, 0, 0], // black
                         width: 1
                     }
                 };
 
                 let simpleMarkerSymbolForDest = {
                     type: "simple-marker",//row.get('policyID'),
-                    color: [255,0,0], // red
+                    color: [255,255,0], // yellow
                     outline: {
-                        color: [255, 255, 255], // white
+                        color: [0, 0, 0], // black
                         width: 1
                     }
                 };
 
                 let simpleMarkerSymbol = {
                     type: "simple-marker",//row.get('policyID'),
-                    color: [0,0,0], // black
+                    color: [0,0,0,0.5], // black
                     outline: {
-                        color: [255, 255, 255], // white
+                        color: [0, 0, 0], // black
                         width: 1
                     }
                 };
@@ -89,7 +89,7 @@ export class WorldMap extends React.Component {
 
                 let simpleLineSymbol = {
                     type: "simple-line",
-                    color: this.state.lineColor,//[169,169,169], // dark-grey
+                    color: [255,0,0,0.3], // red //[169,169,169], // dark-grey
                     width: this.state.width
                 };
 
