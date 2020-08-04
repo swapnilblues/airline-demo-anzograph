@@ -47,7 +47,7 @@ export class WorldMap extends React.Component {
 
                 let simpleMarkerSymbolForDest = {
                     type: "simple-marker",//row.get('policyID'),
-                    color: [255,255,0], // yellow
+                    color: [255,0,0], // red
                     outline: {
                         color: [0, 0, 0], // black
                         width: 1
@@ -56,7 +56,7 @@ export class WorldMap extends React.Component {
 
                 let simpleMarkerSymbol = {
                     type: "simple-marker",//row.get('policyID'),
-                    color: [0,0,0,0.5], // black
+                    color: [255,255,0,0.5], // yellow
                     outline: {
                         color: [0, 0, 0], // black
                         width: 1
