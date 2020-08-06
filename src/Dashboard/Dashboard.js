@@ -554,7 +554,6 @@ class Dashboard extends React.Component {
 
         for(let i=0; i<h.length; i++) {
             let currRow = []
-            console.log("Wrong header",h[i])
             if(h[i] === 'airSum') {
                 currRow.push('Air System Delay')
             } if(h[i] === 'securitySum') {
@@ -743,12 +742,11 @@ class Dashboard extends React.Component {
                         }
                     })
                     let d1 = await this.creatGChartForDistance(c.head.vars,c.results.bindings)
-                    // console.log("d1",d1)
+
                     await this.setState({
                         gChart : d1
                     })
 
-                    // console.log("gChart after setState",this.state.gChart)
                 }
             })
 
@@ -1214,30 +1212,7 @@ class Dashboard extends React.Component {
 
                             </div>
                             <div className="col-sm-9">
-                                <Paper square>
-                                    <Tabs
-                                        indicatorColor="secondary.dark"
-                                        textColor="primary"
-                                        aria-label="disabled tabs example"
-                                    >
-                                        <Tab label="Go to Chart View"
-                                            onClick={async () => {
-                                                await this.setState({
-                                                    view : 'chart',
-                                                })
-                                            }}
-                                        >
-                                        </Tab>
-                                        <Tab label="Go to Map View"
-                                             onClick={ async () => {
-                                                 await this.setState({
-                                                     view : 'map',
-                                                 })
-                                             }}
-                                        >
-                                        </Tab>
-                                    </Tabs>
-                                </Paper>
+
                                 {  this.state.view === 'chart' &&
                                     <table className={"graph-container"}>
                                         <tr>
