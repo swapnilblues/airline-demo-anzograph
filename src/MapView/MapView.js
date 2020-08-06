@@ -44,7 +44,8 @@ class MapView extends React.Component {
         orgLong: '',
         destLat: '',
         destLong: '',
-        query: ''
+        query: '',
+        curr : -1
     }
 
 
@@ -101,72 +102,6 @@ class MapView extends React.Component {
                     }
                 }
             })
-    }
-
-    createDataForLongLatOfAirport = (airport) => {
-        let airportFilter = ''
-
-        if(airport !== 'All') {
-            airportFilter = `filter (?airport_code = '${airport}')`
-        }
-
-        const f1 = new URLSearchParams()
-        let query = "prefix : <https://ontologies.semanticarts.com/raw_data#>" +
-            "prefix fl: <https://ontologies.semanticarts.com/flights/>" +
-            "prefix owl: <http://www.w3.org/2002/07/owl#>" +
-            "prefix skos:    <http://www.w3.org/2004/02/skos/core#>" +
-            `select distinct ?airport_code ?lat ?long
-                from <airline_flight_network>
-                 where {
-                 [ a fl:Airport ;
-                fl:terminalCode ?airport_code ;
-                ]
-                :lat  ?lat ;
-                :long  ?long ;` +
-            airportFilter
-        + "}"
-
-
-        f1.append('query', query)
-        f1.append('output', 'json')
-
-        return f1;
-    }
-
-    runQueryForAirportLatLong = async (airport) => {
-
-
-        const formData = await this.createDataForLongLatOfAirport(airport)
-        await fetch(`http://localhost:7070/sparql`, {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/x-www-form-urlencoded'
-                },
-                body: formData
-            }
-        )
-            .then(async (response) => {
-
-                if (response.status === 200) {
-                    let c = await response.json()
-
-                    console.log("AA", c.results.bindings[0].lat.value)
-
-                    if(airport === this.state.origin) {
-                        await this.setState({
-                            orgLong: parseFloat(c.results.bindings[0].long.value),
-                            orgLat: parseFloat(c.results.bindings[0].lat.value)
-                        })
-                    }
-                    if(airport === this.state.destination) {
-                        await this.setState({
-                            destLong: parseFloat(c.results.bindings[0].long.value),
-                            destLat: parseFloat(c.results.bindings[0].lat.value)
-                        })
-                    }
-                }
-            })
-
     }
 
     //all possible routes
@@ -471,6 +406,9 @@ class MapView extends React.Component {
                                                 <Button endIcon={<Icon>send</Icon>}
                                                         onClick={async () => {
                                                             await this.runQueryForAllRoutes()
+                                                            await this.setState({
+                                                                curr : this.state.curr * -1
+                                                            })
                                                         }
                                                         }
                                                 >
@@ -480,6 +418,9 @@ class MapView extends React.Component {
                                                 <Button endIcon={<Icon>send</Icon>}
                                                         onClick={async () => {
                                                             await this.runQueryForBestRoute()
+                                                            await this.setState({
+                                                                curr : this.state.curr * -1
+                                                            })
                                                         }
                                                         }
                                                 >
@@ -525,6 +466,7 @@ class MapView extends React.Component {
                                directFlight={this.state.directFlight}
                                layOver={this.state.layOver}
                                query={this.state.query}
+                               curr={this.state.curr}
                            />
                         </div>
                     </div>

@@ -191,12 +191,7 @@ export class WorldMap extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(    prevProps.orgLat !== this.props.orgLat
-            || prevProps.orgLong !== this.props.orgLong
-            || prevProps.destLat !== this.props.destLat
-            || prevProps.destLong !== this.props.destLong
-            || prevProps.directFlight !== this.props.directFlight
-            || prevProps.query !== this.props.query
+        if(    prevProps.curr !== this.props.curr
         )
             this.load()
 
