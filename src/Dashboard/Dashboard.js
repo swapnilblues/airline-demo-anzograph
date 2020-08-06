@@ -101,7 +101,8 @@ class Dashboard extends React.Component {
         directFlight: '',
         layOver: [],
         query: '',
-        curr : -1
+        curr : -1,
+        tabValue: 0
     }
 
     month = {
@@ -119,9 +120,13 @@ class Dashboard extends React.Component {
         12 : 'Dec',
     }
 
-    date = {
+    handleChange = (value) => {
 
-}
+        this.setState({
+            tabValue: value,
+            view: value === 0 ? 'chart' : 'map'
+        })
+    }
 
     loadAirports = async () => {
         const f1 = new URLSearchParams()
@@ -1212,6 +1217,21 @@ class Dashboard extends React.Component {
 
                             </div>
                             <div className="col-sm-9">
+
+                                <Paper square>
+                                    <Tabs
+                                        variant="fullWidth"
+                                        value={this.state.tabValue}
+                                        indicatorColor="primary"
+                                        textColor="primary"
+                                        aria-label="disabled tabs example"
+                                        centered
+                                    >
+                                        <Tab label="Show Chart"  onClick={() => this.handleChange(0)}/>
+
+                                        <Tab label="Show Map" selected onClick={() => this.handleChange(1)}/>
+                                    </Tabs>
+                                </Paper>
 
                                 {  this.state.view === 'chart' &&
                                     <table className={"graph-container"}>
