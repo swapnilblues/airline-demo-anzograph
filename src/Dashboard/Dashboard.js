@@ -554,7 +554,18 @@ class Dashboard extends React.Component {
 
         for(let i=0; i<h.length; i++) {
             let currRow = []
-            currRow.push(h[i])
+            console.log("Wrong header",h[i])
+            if(h[i] === 'airSum') {
+                currRow.push('Air System Delay')
+            } if(h[i] === 'securitySum') {
+                currRow.push('Security Delay')
+            } if(h[i] === 'airlineSum') {
+                currRow.push('Airlines Delay')
+            } if(h[i] === 'lateAircraftSum') {
+                currRow.push('Late Aircraft Delay')
+            } if(h[i] === 'weatherSum') {
+                currRow.push('Weather Delay')
+            }
             currRow.push(parseFloat(v[0][h[i]].value))
             data.push(currRow)
         }
@@ -1062,7 +1073,7 @@ class Dashboard extends React.Component {
                             <div className="col-sm-3 bg-dark">
 
                                 <ul className="list-group wbdv-module-list">
-                                    
+
                                     <span className="list-group-item bg-info wbdv-module-item">
 
                                         <span className="wbdv-module-item-title text-dark">Origin</span>
