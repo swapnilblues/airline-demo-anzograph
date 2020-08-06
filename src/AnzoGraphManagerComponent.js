@@ -4,6 +4,7 @@ import LandingComponent from "./LandingComponent";
 import GoogleChartDemo from "./GoogleChartDemo";
 import Dashboard from "./Dashboard/Dashboard";
 import MapView from "./MapView/MapView";
+import AutoComplete from "./Test/AutoComplete";
 
 
 
@@ -38,6 +39,12 @@ class AnzoGraphManagerComponent extends React.Component {
                         path="/maps"
                         exact={true}
                         component={MapView}
+                    >
+                    </Route>
+                    <Route
+                        path="/auto-complete"
+                        exact={true}
+                        component={AutoComplete}
                     >
                     </Route>
                 </Router>
