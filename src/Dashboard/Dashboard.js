@@ -12,6 +12,8 @@ import Tab from "@material-ui/core/Tab";
 import {Link} from "react-router-dom";
 import {WorldMap} from "../MapView/WorldMap";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 
 class Dashboard extends React.Component {
@@ -72,7 +74,11 @@ class Dashboard extends React.Component {
 
     state = {
         origin : 'All',
+        originVal: 'All',
+        originInput: '',
         destination : 'All',
+        destinationInput: '',
+        destinationVal: 'All',
         start : '',
         end : '',
         startLabel: '',
@@ -92,7 +98,7 @@ class Dashboard extends React.Component {
         titleOfGraph2: '',
         titleOfGraph3: '',
         titleOfGraph4: '',
-        airports: [{value:'All', label:'All'}],
+        airports: ['All'],
         view: 'chart',
         orgLat: '',
         orgLong: '',
@@ -173,10 +179,9 @@ class Dashboard extends React.Component {
                     for(let i=0; i<datas.length;i++) {
                         let curr = datas[i].airport_code.value
                         await this.setState({
-                            airports: [...this.state.airports, {
-                                value: curr,
-                                label: curr + " - " + datas[i].airport_city.value
-                            }],
+                            airports: [...this.state.airports,
+                                curr + " - " + datas[i].airport_city.value
+                            ],
                         })
                     }
                 }
@@ -1081,10 +1086,24 @@ class Dashboard extends React.Component {
 
                                         <span className="wbdv-module-item-title text-dark">Origin</span>
 
-                                        <Select
-                                            defaultValue={this.state.airports[0]}
+                                        <Autocomplete
+                                            value={this.state.originVal}
+                                            inputValue={this.state.originInput}
+                                            onInputChange={(e, newInputValue) => {
+                                                this.setState({
+                                                    originInput: newInputValue,
+                                                })
+                                            }}
+                                            onChange={(e, newValue) => {
+                                                this.setState({
+                                                    originVal: newValue,
+                                                    origin: newValue ? (newValue.length < 3? newValue: newValue.substring(0,3)) : ''
+                                                })
+                                            }}
+                                            id="controllable-states-demo"
                                             options={this.state.airports}
-                                            onChange={this.changeOrigin}
+                                            style={{ width: 300}}
+                                            renderInput={(params) => <TextField {...params} variant="outlined" />}
                                         />
 
                                     </span>
@@ -1092,10 +1111,24 @@ class Dashboard extends React.Component {
                                     <span className="list-group-item bg-info wbdv-module-item">
                                         <span className="wbdv-module-item-title text-dark">Destination</span>
 
-                                        <Select
-                                            defaultValue={this.state.airports[0]}
+                                        <Autocomplete
+                                            value={this.state.destinationVal}
+                                            inputValue={this.state.destinationInput}
+                                            onInputChange={(e, newInputValue) => {
+                                                this.setState({
+                                                    destinationInput: newInputValue,
+                                                })
+                                            }}
+                                            onChange={(e, newValue) => {
+                                                this.setState({
+                                                    destinationVal: newValue,
+                                                    destination: newValue ? (newValue.length < 3? newValue: newValue.substring(0,3)) : ''
+                                                })
+                                            }}
+                                            id="controllable-states-demo"
                                             options={this.state.airports}
-                                            onChange={this.changeDestination}
+                                            style={{ width: 300}}
+                                            renderInput={(params) => <TextField {...params} variant="outlined" />}
                                         />
 
                                     </span>
