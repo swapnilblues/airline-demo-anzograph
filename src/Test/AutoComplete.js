@@ -4,12 +4,13 @@ import { Button } from '@material-ui/core';
 import Icon from "@material-ui/core/Icon";
 import Select from 'react-select'
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Autocomplete from  'react-autocomplete';
+// import Autocomplete from  'react-autocomplete';
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import {Link} from "react-router-dom";
 import Tab from "@material-ui/core/Tab";
-import {WorldMap} from "../MapView/WorldMap";
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
 class AutoComplete extends React.Component {
@@ -33,11 +34,12 @@ class AutoComplete extends React.Component {
 
     state = {
         origin : 'All',
+        originVal: 'All',
+        originInput: '',
         destination : 'All',
-        startLabel: '',
-        endLabel: '',
+        destinationVal: 'All',
         result: {status: '', value: {heads: {vars: []}, results: {bindings: []}}, h: [], v: [], err: '', xmlOutput: ''},
-        airports: [{value:'All', label:'All'}],
+        airports: ['All'],
         layOver: [],
         layOverTest: [],
         directFlight: '',
@@ -94,10 +96,9 @@ class AutoComplete extends React.Component {
                     for(let i=0; i<datas.length;i++) {
                         let curr = datas[i].airport_code.value
                         await this.setState({
-                            airports: [...this.state.airports, {
-                                value: curr,
-                                label: curr + " - " + datas[i].airport_city.value
-                            }],
+                            airports: [...this.state.airports,
+                                curr + " - " + datas[i].airport_city.value
+                            ],
                         })
                     }
                 }
@@ -115,109 +116,69 @@ class AutoComplete extends React.Component {
 
                             <ul className="list-group wbdv-module-list">
 
-                                    <span className="list-group-item bg-secondary wbdv-module-item">
-                                        <Paper square>
-                                            <Tabs
-                                                indicatorColor="secondary.dark"
-                                                textColor="primary"
-                                                aria-label="disabled tabs example"
-                                            >
-
-                                             <Link to={`/dashboard`}>
-                                                <Tab label="Go to Chart View">
-                                                </Tab>
-                                             </Link>
-                                             <Link to={`/maps`}>
-                                                <Tab label="Go to Map View">
-                                                x   </Tab>
-                                             </Link>
-                                             </Tabs>
-                                         </Paper>
-                                    </span>
 
                                 <span className="list-group-item bg-info wbdv-module-item">
 
                                         <span className="wbdv-module-item-title text-dark">Origin</span>
 
                                        <Autocomplete
-                                           menuStyle={{
-                                               borderRadius: '3px',
-                                               boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-                                               background: 'rgba(255, 255, 255, 0.9)',
-                                               padding: '2px 0',
-                                               fontSize: '90%',
-                                               position: 'fixed',
-                                               overflow: 'auto',
-                                               maxHeight: '50%', // TODO: don't cheat, let it flow to the bottom
-                                               zIndex: '998',
+                                           value={this.state.originVal}
+                                           inputValue={this.state.inputValue}
+                                           onInputChange={(e, newInputValue) => {
+                                               this.setState({
+                                                   originInput: newInputValue,
+                                               })
                                            }}
-                                           items={this.state.airports}
-                                           shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
-                                           getItemValue={item => item.label}
-                                           renderItem={(item, highlighted) =>
-                                               <div
-                                                   key={item.value}
-                                                   style={{ backgroundColor: highlighted ? '#eee' : 'transparent'}}
-                                               >
-                                                   {item.label}
-                                               </div>
-                                           }
-                                           value={this.state.value}
-                                           onChange={e => this.setState({ value: e.target.value, origin : e.target.value.substring(0,3) })}
-                                           onSelect={value => this.setState({ value: value, origin : value.substring(0,3) })}
+                                           onChange={(e, newValue) => {
+                                               this.setState({
+                                                   originVal: newValue,
+                                                   origin: newValue ? (newValue.length < 3? newValue: newValue.substring(0,3)) : ''
+                                               })
+                                           }}
+                                           id="controllable-states-demo"
+                                           options={this.state.airports}
+                                           style={{ width: 300}}
+                                           renderInput={(params) => <TextField {...params} variant="outlined" />}
                                        />
 
                                     </span>
 
-                                <span className="list-group-item bg-info wbdv-module-item">
+                                {/*<span className="list-group-item bg-info wbdv-module-item">*/}
 
-                                        <span className="wbdv-module-item-title text-dark">Destination</span>
+                                {/*        <span className="wbdv-module-item-title text-dark">Destination</span>*/}
 
-                                       <Autocomplete
-                                           menuStyle={{
-                                               borderRadius: '3px',
-                                               boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-                                               background: 'rgba(255, 255, 255, 0.9)',
-                                               padding: '2px 0',
-                                               fontSize: '90%',
-                                               position: 'fixed',
-                                               overflow: 'auto',
-                                               maxHeight: '50%', // TODO: don't cheat, let it flow to the bottom
-                                               zIndex: '998',
-                                           }}
-                                           items={this.state.airports}
-                                           shouldItemRender={(item1, value1) => item1.label.toLowerCase().indexOf(value1.toLowerCase()) > -1}
-                                           getItemValue={item1 => item1.label}
-                                           renderItem={(item1, highlighted1) =>
-                                               <div
-                                                   key={item1.value}
-                                                   style={{ backgroundColor: highlighted1 ? '#eee' : 'transparent'}}
-                                               >
-                                                   {item1.label}
-                                               </div>
-                                           }
-                                           value={this.state.value1}
-                                           onChange={e => this.setState({ value1: e.target.value, destination : e.target.value.substring(0,3) })}
-                                           onSelect={value1 => this.setState({ value1: value1, destination : value1.substring(0,3) })}
-                                       />
+                                {/*       <Autocomplete*/}
+                                {/*           menuStyle={{*/}
+                                {/*               borderRadius: '3px',*/}
+                                {/*               boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',*/}
+                                {/*               background: 'rgba(255, 255, 255, 0.9)',*/}
+                                {/*               padding: '2px 0',*/}
+                                {/*               fontSize: '90%',*/}
+                                {/*               position: 'fixed',*/}
+                                {/*               overflow: 'auto',*/}
+                                {/*               maxHeight: '50%', // TODO: don't cheat, let it flow to the bottom*/}
+                                {/*               zIndex: '998',*/}
+                                {/*           }}*/}
+                                {/*           items={this.state.airports}*/}
+                                {/*           shouldItemRender={(item1, value1) => item1.toLowerCase().indexOf(value1.toLowerCase()) > -1}*/}
+                                {/*           getItemValue={item1 => item1}*/}
+                                {/*           renderItem={(item1, highlighted1) =>*/}
+                                {/*               <div*/}
+                                {/*                   className="text-field-auto-complete"*/}
+                                {/*                   key={item1}*/}
+                                {/*               >*/}
+                                {/*                   {item1}*/}
+                                {/*               </div>*/}
+                                {/*           }*/}
+                                {/*           value={this.state.value1}*/}
+                                {/*           onChange={e => this.setState({ value1: e.target.value, destination : e.target.value.substring(0,3) })}*/}
+                                {/*           onSelect={value1 => this.setState({ value1: value1, destination : value1.substring(0,3) })}*/}
+                                {/*       />*/}
 
-                                    </span>
+                                {/*    </span>*/}
                             </ul>
 
 
-                        </div>
-                        <div className="col-sm-9">
-                            <WorldMap
-                                origin={this.state.origin}
-                                destination={this.state.destination}
-                                orgLat={this.state.orgLat}
-                                orgLong={this.state.orgLong}
-                                destLat={this.state.destLat}
-                                destLong={this.state.destLong}
-                                directFlight={this.state.directFlight}
-                                layOver={this.state.layOver}
-                                query={this.state.query}
-                            />
                         </div>
                     </div>
 
