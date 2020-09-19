@@ -1074,11 +1074,11 @@ class Dashboard extends React.Component {
 
         render() {
             return (
-                <div>
+                <div className="mid-gray">
 
-                    <div className={"container-fluid bg-secondary"}>
+                    <div className="container-fluid mid-gray">
                         <div className="row align-items-start">
-                            <div className="col-sm-3 bg-dark">
+                            <div className="col-sm-3 mid-gray">
 
                                 <ul className="list-group wbdv-module-list">
 
@@ -1247,11 +1247,11 @@ class Dashboard extends React.Component {
 
                                 </ul>
 
-
                             </div>
+
                             <div className="col-sm-9">
 
-                                <Paper square>
+                                {/*<Paper square>*/}
                                     <Tabs
                                         variant="fullWidth"
                                         value={this.state.tabValue}
@@ -1264,61 +1264,65 @@ class Dashboard extends React.Component {
 
                                         <Tab label="Show Map" selected onClick={() => this.handleChange(1)}/>
                                     </Tabs>
-                                </Paper>
+                                {/*</Paper>*/}
 
                                 {  this.state.view === 'chart' &&
-                                    <table className={"graph-container"}>
-                                        <tr>
+                                    <div className={"graph-container"}>
+                                        <div className={"row"}>
                                             {
-                                                <td>
+                                                <div className={"col-6"}>
                                                     <BarChart
                                                         gChart={this.state.gChart3}
                                                         title={this.state.titleOfGraph3}
                                                     />
 
-                                                </td>
+                                                </div>
                                             }
                                             {
-                                                <td>
+                                                <div className={"col-6"}>
                                                     <PieChart
                                                         gChart={this.state.gChart1}
                                                         title={this.state.titleOfGraph1}
                                                     />
-                                                </td>
+                                                </div>
                                             }
-                                        </tr>
-                                        <tr>
+                                        </div>
+                                        <div className={"row"}>
                                             {
-                                                <td>
+                                                <div className={"col-6"}>
                                                     <LineChart
                                                         gChart={this.state.gChart2}
                                                         title={this.state.titleOfGraph2}
                                                     />
-                                                </td>
+                                                </div>
                                             }
-                                            <td>
-                                                <PieChart
-                                                    gChart={this.state.gChart4}
-                                                    title={this.state.titleOfGraph4}
-                                                />
-                                            </td>
-                                        </tr>
-                                    </table>
+                                            {
+                                                <div className={"col-6"}>
+                                                    <PieChart
+                                                        gChart={this.state.gChart4}
+                                                        title={this.state.titleOfGraph4}
+                                                    />
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                 }
                                 {
                                     this.state.view === 'map' &&
-                                    <WorldMap
-                                    origin={this.state.origin}
-                                    destination={this.state.destination}
-                                    orgLat={this.state.orgLat}
-                                    orgLong={this.state.orgLong}
-                                    destLat={this.state.destLat}
-                                    destLong={this.state.destLong}
-                                    directFlight={this.state.directFlight}
-                                    layOver={this.state.layOver}
-                                    query={this.state.query}
-                                    curr={this.state.curr}
-                                    />
+                                    <div className="div-border">
+                                        <WorldMap
+                                            origin={this.state.origin}
+                                            destination={this.state.destination}
+                                            orgLat={this.state.orgLat}
+                                            orgLong={this.state.orgLong}
+                                            destLat={this.state.destLat}
+                                            destLong={this.state.destLong}
+                                            directFlight={this.state.directFlight}
+                                            layOver={this.state.layOver}
+                                            query={this.state.query}
+                                            curr={this.state.curr}
+                                        />
+                                    </div>
                                 }
 
                             </div>

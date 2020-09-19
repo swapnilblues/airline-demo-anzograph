@@ -12,7 +12,7 @@ return (
             this.props.gChart && this.props.gChart[0] &&
             <Chart
                 width={'720px'}
-                height={'500px'}
+                height={'465px'}
                 chartType="BarChart"
                 loader={<div>Loading Chart</div>}
                 data={
@@ -20,11 +20,12 @@ return (
                 }
 
                 options={{
-                    backgroundColor: "#6c757d",
+                    backgroundColor: "#aeb1b5",
                     title: this.props.title,
                     hAxis: {
                         minValue: 0,
-                    }
+                    },
+                    chartArea: { width: '65%', height: '70%' },
                 }}
                 // For tests
                 rootProps={{ 'data-testid': '2' }}

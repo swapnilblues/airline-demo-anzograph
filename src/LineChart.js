@@ -12,7 +12,7 @@ class LineChart extends React.Component {
                     this.props.gChart && this.props.gChart[0] &&
                     <Chart
                         width={'720px'}
-                        height={'500px'}
+                        height={'465px'}
                         chartType="AreaChart"
                         loader={<div>Loading Chart</div>}
                         data={
@@ -20,7 +20,7 @@ class LineChart extends React.Component {
                         }
 
                         options={{
-                            backgroundColor: "#6c757d",
+                            backgroundColor: "#aeb1b5",
                             title: this.props.title,
                             chart: {
                                 title: this.props.title
@@ -28,7 +28,7 @@ class LineChart extends React.Component {
                             hAxis: {
                                 minValue: 0,
                             },
-                            chartArea: { width: '65%', height: '70%' },
+                            chartArea: { width: '65%', height: '70%' }
                         }}
                         // For tests
                         rootProps={{ 'data-testid': '2' }}
