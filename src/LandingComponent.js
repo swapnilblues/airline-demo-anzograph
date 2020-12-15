@@ -3,6 +3,7 @@ import React from "react";
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import ShowOutput from "./ShowOutput";
 import XMLParser from 'react-xml-parser';
+import {AZG_API} from "./common/config";
 
 
 class LandingComponent extends React.Component {
@@ -31,7 +32,7 @@ componentDidMount() {
 getGraphsFromDB = () => {
     const formData1 = new URLSearchParams()
     formData1.append('query','select ?g {graph?g{}}')
-    fetch(`http://localhost:7070/sparql`, {
+    fetch(AZG_API, {
         method: "POST",
         headers: {
             // 'Authorization': 'Basic dGVzdDp0ZXN0',
@@ -105,7 +106,7 @@ creatGChart = (h,v) => {
 runQuery = async () => {
 
     const formData = await this.createData()
-    await fetch(`http://localhost:7070/sparql`, {
+    await fetch(AZG_API, {
             method: "POST",
             headers: {
                 // 'Authorization': 'Basic dGVzdDp0ZXN0',

@@ -14,6 +14,7 @@ import {WorldMap} from "../MapView/WorldMap";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import {AZG_API} from "../common/config";
 
 
 class Dashboard extends React.Component {
@@ -163,7 +164,7 @@ class Dashboard extends React.Component {
             ' ?airport_code\n'
         await f1.append('query', query)
         await f1.append('output', 'json')
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -205,7 +206,7 @@ class Dashboard extends React.Component {
             '}'
         await f1.append('query', query)
         await f1.append('output', 'json')
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -641,7 +642,7 @@ class Dashboard extends React.Component {
                 gChart: ''
             })
             const formData = await this.createDataForDiffDelays()
-            await fetch(`http://localhost:7070/sparql`, {
+            await fetch(AZG_API, {
                     method: "POST",
                     headers: {
                         'content-type': 'application/x-www-form-urlencoded'
@@ -689,7 +690,7 @@ class Dashboard extends React.Component {
             gChart: ''
         })
         const formData = await this.createDataForWeatherDelay()
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -730,7 +731,7 @@ class Dashboard extends React.Component {
             showArea: false,
         })
         const formData = await this.createDataForDistance()
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -776,7 +777,7 @@ class Dashboard extends React.Component {
             gChart: ''
         })
         const formData = await this.createDataForAirlineDelay()
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -823,7 +824,7 @@ class Dashboard extends React.Component {
             gChart: ''
         })
         const formData = await this.createDataForCancellation()
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -911,7 +912,7 @@ class Dashboard extends React.Component {
     runQueryForAllRoutes = async () => {
 
         const formData = await this.createDataForAllRoutes(this.state.origin,this.state.destination)
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -1012,7 +1013,7 @@ class Dashboard extends React.Component {
     runQueryForBestRoute = async () => {
 
         const formData = await this.createDataForBestRoute(this.state.origin,this.state.destination)
-        await fetch(`http://localhost:7070/sparql`, {
+        await fetch(AZG_API, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
