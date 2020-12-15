@@ -30,11 +30,11 @@ componentDidMount() {
 
 getGraphsFromDB = () => {
     const formData1 = new URLSearchParams()
-    let convert = require('xml-js');
-    formData1.append('query','select?g{graph?g{}}')
+    formData1.append('query','select ?g {graph?g{}}')
     fetch(`http://localhost:7070/sparql`, {
         method: "POST",
         headers: {
+            // 'Authorization': 'Basic dGVzdDp0ZXN0',
             'content-type': 'application/x-www-form-urlencoded'
         },
         body: formData1
@@ -47,7 +47,7 @@ getGraphsFromDB = () => {
             let xmlDoc = parser.parseFromString(c, 'text/xml')
             let graphs = xmlDoc.getElementsByTagName('uri')
 
-            console.log(graphs[0].innerHTML)
+            // console.log(graphs[0].innerHTML)
 
             await this.setState({
                 graphDBs : []
@@ -108,6 +108,7 @@ runQuery = async () => {
     await fetch(`http://localhost:7070/sparql`, {
             method: "POST",
             headers: {
+                // 'Authorization': 'Basic dGVzdDp0ZXN0',
               'content-type': 'application/x-www-form-urlencoded'
              },
             body: formData
